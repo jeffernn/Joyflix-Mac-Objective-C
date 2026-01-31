@@ -14,11 +14,10 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 设置 Xcode 版本（推荐方式）
-        # 使用官方Action设置Xcode版本，无需手动指定路径
-        uses: actions/setup-xcode@v2
+      # 关键修改：使用正确路径的Action来设置Xcode 15.2
+      - name: 配置Xcode 15.2版本
+        uses: fwalti/setup-xcode@v1
         with:
-          # 指定Xcode版本，支持15.2等，若不指定则使用环境默认版本
           xcode-version: '15.2'
 
       - name: 构建通用架构 .app
@@ -29,8 +28,7 @@ jobs:
             -arch x86_64 -arch arm64 \
             -derivedDataPath build \
             clean build
-        # 可选：增加超时时间，避免大型项目构建超时
-        timeout-minutes: 30
+        timeout-minutes: 30  # 避免大型项目构建超时
 
       - name: 打包 .app 为 zip
         run: |
