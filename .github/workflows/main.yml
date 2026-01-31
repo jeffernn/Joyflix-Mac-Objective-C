@@ -14,8 +14,14 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 设置 Xcode 版本
-        run: sudo xcode-select -s /Applications/Xcode_15.2.app
+      - name: 设置 Xcode 为默认版本（Xcode.app，简洁稳定）
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app
+
+      - name: 验证 Xcode 版本（确认配置生效）
+        run: |
+          xcode-select -p
+          xcodebuild -version
 
       - name: 构建通用架构 .app
         run: |
