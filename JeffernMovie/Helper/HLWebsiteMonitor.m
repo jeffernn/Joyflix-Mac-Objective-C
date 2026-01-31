@@ -1,10 +1,10 @@
-//Jeffern影视平台 ©Jeffern 2025/7/23
+//Joyflix ©Joyflix 2025/7/23
 
 #import "HLWebsiteMonitor.h"
 #import "HLHomeViewController.h"
 #import <UserNotifications/UserNotifications.h>
 
-#define MONITOR_DATA_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/JeffernMovie/monitor.json"]
+#define MONITOR_DATA_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Joyflix/monitor.json"]
 
 @implementation HLMonitoredWebsite
 
@@ -229,9 +229,8 @@
 
         if (!name.length || !url.length) continue;
 
-        // 排除CCTV、Emby、抖音短剧和直播站点
+        // 排除CCTV、抖音短剧和直播站点
         if ([name isEqualToString:@"CCTV"] ||
-            [name isEqualToString:@"Emby"] ||
             [name isEqualToString:@"抖音短剧"] ||
             [name isEqualToString:@"直播"]) {
             NSLog(@"跳过%@站点监控: %@ - %@", name, name, url);
@@ -256,7 +255,7 @@
 }
 
 - (void)syncCustomSites {
-    // 获取用户自定义站点
+    // 获取用户站点
     NSArray *customSites = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CustomSites"] ?: @[];
 
     for (NSDictionary *site in customSites) {
@@ -277,34 +276,15 @@
         if (!exists) {
             HLMonitoredWebsite *website = [[HLMonitoredWebsite alloc] initWithName:name url:url];
             [self.websites addObject:website];
-            NSLog(@"添加自定义站点监控: %@ - %@", name, url);
+            NSLog(@"添加用户站点监控: %@ - %@", name, url);
         }
     }
 
-    // 添加✨✨✨自定义网址到监控
-    NSString *userCustomURL = [[NSUserDefaults standardUserDefaults] stringForKey:@"UserCustomSiteURL"];
-    if (userCustomURL.length > 0) {
-        // 检查是否已存在
-        BOOL exists = NO;
-        for (HLMonitoredWebsite *website in self.websites) {
-            if ([website.url isEqualToString:userCustomURL]) {
-                exists = YES;
-                break;
-            }
-        }
-
-        if (!exists) {
-            HLMonitoredWebsite *website = [[HLMonitoredWebsite alloc] initWithName:@"✨✨✨" url:userCustomURL];
-            [self.websites addObject:website];
-            NSLog(@"添加✨✨✨自定义网址监控: %@", userCustomURL);
-        }
-    }
 }
 
 - (void)syncAllSites {
-    // 清理已存在的CCTV、Emby、抖音短剧和直播监控数据
+    // 清理已存在的CCTV、抖音短剧和直播监控数据
     [self removeWebsiteWithName:@"CCTV"];
-    [self removeWebsiteWithName:@"Emby"];
     [self removeWebsiteWithName:@"抖音短剧"];
     [self removeWebsiteWithName:@"直播"];
 

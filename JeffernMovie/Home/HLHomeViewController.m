@@ -1,4 +1,4 @@
-//Jeffern影视平台 ©Jeffern 2025/7/15
+//Joyflix ©Joyflix 2025/7/15
 
 #import "HLHomeViewController.h"
 #import "NSView+ZCAddition.h"
@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
 
-#define HISTORY_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/JeffernMovie/history.json"]
+#define HISTORY_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Joyflix/history.json"]
 #define SESSION_STATE_KEY @"HLHomeViewController_LastSessionURL"
 
 #pragma mark ----
@@ -98,7 +98,7 @@ typedef enum : NSUInteger {
 
     // 监听菜单切换内置影视等通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleChangeUserCustomSiteURLNotification:) name:@"ChangeUserCustomSiteURLNotification" object:nil];
-    // 监听自定义站点变化通知
+    // 监听用户站点变化通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleCustomSitesDidChangeNotification:) name:@"CustomSitesDidChangeNotification" object:nil];
 
     // 智能预加载常用站点
@@ -118,12 +118,19 @@ typedef enum : NSUInteger {
             BOOL autoOpenLast = [[NSUserDefaults standardUserDefaults] boolForKey:@"AutoOpenLastSite"];
             NSString *lastUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"LastBuiltInSiteURL"];
             NSString *customUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"UserCustomSiteURL"];
+
             if (autoOpenLast && lastUrl.length > 0) {
+                // "记录当前站点"功能启用时，优先加载上次访问的站点
                 [self loadUserCustomSiteURL:lastUrl];
             } else if (customUrl.length > 0) {
+                // 用户设置了用户站点，加载用户站点
                 [self loadUserCustomSiteURL:customUrl];
+            } else if (lastUrl.length > 0) {
+                // "记录当前站点"功能未启用，但存在上次使用的内置站点URL，自动加载它
+                [self loadUserCustomSiteURL:lastUrl];
             } else {
-                [self promptForCustomSiteURLAndLoadIfNeeded];
+                // 没有任何记录，直接显示内置影视站点选择弹窗
+                [self promptForBuiltInSiteURLAndLoadIfNeeded];
             }
         });
     });
@@ -134,9 +141,6 @@ typedef enum : NSUInteger {
     if (url && [url isKindOfClass:[NSString class]]) {
         [self loadUserCustomSiteURL:url];
         [self showEmptyTipsIfNeeded];
-    } else {
-        // object为nil时，弹出填写窗口
-        [self changeUserCustomSiteURL:nil];
     }
 }
 
@@ -258,47 +262,6 @@ typedef enum : NSUInteger {
     // 获取当前URL，统一使用一个变量
     NSString *currentUrl = webView.URL.absoluteString;
 
-    // 自动登录Emby
-    if ([currentUrl hasPrefix:@"https://dongman.theluyuan.com"]) {
-        // 动态获取账号密码，未设置时用默认
-        NSString *embyUser = [[NSUserDefaults standardUserDefaults] stringForKey:@"EmbyCustomUser"];
-        NSString *embyPass = [[NSUserDefaults standardUserDefaults] stringForKey:@"EmbyCustomPass"];
-        if (!embyUser || embyUser.length == 0) {
-            embyUser = @"stop";
-        }
-        if (!embyPass || embyPass.length == 0) {
-            embyPass = @"123";
-        }
-        NSString *js = [NSString stringWithFormat:@"var tryCount=0;var timer=setInterval(function(){\n"
-            "var userInput = document.querySelector('input[type=\\\"text\\\"],input[name*=\\\"user\\\"],input[placeholder*=\\\"用\\\"]');\n"
-            "var passInput = document.querySelector('input[type=\\\"password\\\"],input[name*=\\\"pass\\\"],input[placeholder*=\\\"密\\\"]');\n"
-            "var form = userInput ? userInput.form : null;\n"
-            "if(userInput&&passInput){\n"
-            "userInput.focus();\n"
-            "userInput.value='%@';\n"
-            "userInput.dispatchEvent(new Event('input', {bubbles:true}));\n"
-            "userInput.dispatchEvent(new Event('change', {bubbles:true}));\n"
-            "passInput.focus();\n"
-            "passInput.value='%@';\n"
-            "passInput.dispatchEvent(new Event('input', {bubbles:true}));\n"
-            "passInput.dispatchEvent(new Event('change', {bubbles:true}));\n"
-            "passInput.blur();\n"
-            "}\n"
-            "if(form&&userInput&&passInput){\n"
-            "try{\n"
-            "form.dispatchEvent(new Event('submit', {bubbles:true,cancelable:true}));\n"
-            "form.requestSubmit ? form.requestSubmit() : form.submit();\n"
-            "}catch(e){form.submit();}\n"
-            "clearInterval(timer);\n"
-            "}\n"
-            "if(++tryCount>60)clearInterval(timer);\n"
-            "}, 100);", embyUser, embyPass];
-        [webView evaluateJavaScript:js completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-            if (error) {
-                NSLog(@"自动登录Emby注入JS出错: %@", error);
-            }
-        }];
-    }
 
     // 获取网页标题并存入观影记录
     [webView evaluateJavaScript:@"document.title" completionHandler:^(id _Nullable title, NSError * _Nullable error) {
@@ -342,29 +305,29 @@ typedef enum : NSUInteger {
 }
 
 
-- (void)jeffernMovieCurrentApiDidChange:(NSNotification *)notification{
+- (void)joyflixCurrentApiDidChange:(NSNotification *)notification{
     [self.currentWebView evaluateJavaScript:@"document.location.href" completionHandler:^(NSString * _Nullable url, NSError * _Nullable error) {
         if (self.currentUrl == nil) {
             self.currentUrl = url;
         }
-     
+
     }];
 }
 
 
-- (void)jeffernMovieDidCopyCurrentURL:(NSNotification *)notification{
+- (void)joyflixDidCopyCurrentURL:(NSNotification *)notification{
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     [pasteboard clearContents];
     [pasteboard setString:self.currentWebView.URL.absoluteString forType:NSPasteboardTypeString];
 }
 
-- (void)jeffernMovieGoBackCurrentURL:(NSNotification *)notification{
+- (void)joyflixGoBackCurrentURL:(NSNotification *)notification{
     if ([self.currentWebView canGoBack]) {
         [self.currentWebView goBack];
     }
 }
 
-- (void)jeffernMovieGoForwardCurrentURL:(NSNotification *)notification{
+- (void)joyflixGoForwardCurrentURL:(NSNotification *)notification{
     if ([self.currentWebView canGoForward]) {
         [self.currentWebView goForward];
     }
@@ -415,7 +378,7 @@ typedef enum : NSUInteger {
 
 
 
-    // 只保留最右下角“+”按钮的注入，支持动态获取自定义站点
+    // 只保留最右下角“+”按钮的注入，支持动态获取用户站点
     // 恢复使用红色按钮JavaScript，但先不注入，等页面加载完成后手动注入
     // NSString *globalBtnJS = [self generateRedButtonJavaScript];
     // WKUserScript *globalBtnScript = [[WKUserScript alloc] initWithSource:globalBtnJS injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
@@ -472,12 +435,12 @@ typedef enum : NSUInteger {
 
 
 
-- (void)jeffernMovieRequestSuccess:(NSNotification *)notification{
-    
+- (void)joyflixRequestSuccess:(NSNotification *)notification{
 
-    
+
+
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"UserCustomSiteURL"]) {
-    
+
     }
 }
 
@@ -589,6 +552,46 @@ typedef enum : NSUInteger {
 
 #pragma mark - Custom Site URL
 
+- (void)promptForBuiltInSiteURLAndLoadIfNeeded {
+    // 弹窗选择内置影视站点
+    NSArray *siteNames = [HLHomeViewController getBuiltInSiteNames];
+    NSArray *siteURLs = [HLHomeViewController getBuiltInSiteURLs];
+    NSAlert *siteAlert = [[NSAlert alloc] init];
+    siteAlert.messageText = @"请选择内置影视站点";
+    for (NSString *name in siteNames) {
+        [siteAlert addButtonWithTitle:name];
+    }
+    __weak typeof(self) weakSelf = self;
+    NSWindow *mainWindow = [NSApplication sharedApplication].mainWindow ?: self.view.window;
+    if (mainWindow) {
+        [siteAlert beginSheetModalForWindow:mainWindow completionHandler:^(NSModalResponse siteCode) {
+            NSInteger idx = siteCode - NSAlertFirstButtonReturn;
+            if (idx >= 0 && idx < siteURLs.count) {
+                NSString *url = siteURLs[idx];
+                [weakSelf loadUserCustomSiteURL:url];
+
+                // 记录用户选择的内置站点URL，以便下次自动打开
+                [[NSUserDefaults standardUserDefaults] setObject:url forKey:@"LastBuiltInSiteURL"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            // 取消不做任何事
+        }];
+    } else {
+        // 兜底：直接阻塞弹窗
+        NSModalResponse siteCode = [siteAlert runModal];
+        NSInteger idx = siteCode - NSAlertFirstButtonReturn;
+        if (idx >= 0 && idx < siteURLs.count) {
+            NSString *url = siteURLs[idx];
+            [self loadUserCustomSiteURL:url];
+
+            // 记录用户选择的内置站点URL，以便下次自动打开
+            [[NSUserDefaults standardUserDefaults] setObject:url forKey:@"LastBuiltInSiteURL"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        // 取消不做任何事
+    }
+}
+
 - (void)promptForCustomSiteURLAndLoadIfNeeded {
     NSString *cachedUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"UserCustomSiteURL"];
     if (!cachedUrl || cachedUrl.length == 0) {
@@ -597,7 +600,7 @@ typedef enum : NSUInteger {
         alert.informativeText = @"https://www.xxx.com";
         NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
         [alert setAccessoryView:input];
-        [alert addButtonWithTitle:@"✨✨✨"];
+        [alert addButtonWithTitle:@"添加自定义站点"];
         [alert addButtonWithTitle:@"使用内置影视"];
         [alert.window setInitialFirstResponder:input];
         __weak typeof(self) weakSelf = self;
@@ -617,22 +620,7 @@ typedef enum : NSUInteger {
                     }
                 } else if (returnCode == NSAlertSecondButtonReturn) {
                     // 弹窗选择内置影视站点
-                    NSArray *siteNames = [HLHomeViewController getBuiltInSiteNames];
-                    NSArray *siteURLs = [HLHomeViewController getBuiltInSiteURLs];
-                    NSAlert *siteAlert = [[NSAlert alloc] init];
-                    siteAlert.messageText = @"请选择内置影视站点";
-                    for (NSString *name in siteNames) {
-                        [siteAlert addButtonWithTitle:name];
-                    }
-                    NSWindow *mainWindow = [NSApplication sharedApplication].mainWindow ?: self.view.window;
-                    [siteAlert beginSheetModalForWindow:mainWindow completionHandler:^(NSModalResponse siteCode) {
-                        NSInteger idx = siteCode - NSAlertFirstButtonReturn;
-                        if (idx >= 0 && idx < siteURLs.count) {
-                            NSString *url = siteURLs[idx];
-                            [weakSelf loadUserCustomSiteURL:url];
-                        }
-                        // 取消不做任何事
-                    }];
+                    [weakSelf promptForBuiltInSiteURLAndLoadIfNeeded];
                 }
             }];
         } else {
@@ -650,20 +638,7 @@ typedef enum : NSUInteger {
                     [NSApp terminate:nil];
                 }
             } else if (returnCode == NSAlertSecondButtonReturn) {
-                NSArray *siteNames = [HLHomeViewController getBuiltInSiteNames];
-                NSArray *siteURLs = [HLHomeViewController getBuiltInSiteURLs];
-                NSAlert *siteAlert = [[NSAlert alloc] init];
-                siteAlert.messageText = @"请选择内置影视站点";
-                for (NSString *name in siteNames) {
-                    [siteAlert addButtonWithTitle:name];
-                }
-                NSModalResponse siteCode = [siteAlert runModal];
-                NSInteger idx = siteCode - NSAlertFirstButtonReturn;
-                if (idx >= 0 && idx < siteURLs.count) {
-                    NSString *url = siteURLs[idx];
-                    [self loadUserCustomSiteURL:url];
-                }
-                // 取消不做任何事
+                [self promptForBuiltInSiteURLAndLoadIfNeeded];
             }
         }
     } else {
@@ -707,14 +682,6 @@ typedef enum : NSUInteger {
     [self addHistoryWithName:nil url:urlString];
 }
 
-- (void)changeUserCustomSiteURL:(id)sender {
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"UserCustomSiteURL"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    // 通知监控系统重新同步站点（移除✨✨✨监控）
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomSitesDidChangeNotification" object:nil];
-    [self promptForCustomSiteURLAndLoadIfNeeded];
-    [self showEmptyTipsIfNeeded];
-}
 
 - (void)showEmptyTipsIfNeeded {
     // 已去除全局浮动提示，不再显示 label。
@@ -737,7 +704,7 @@ typedef enum : NSUInteger {
 // 新增：生成红色按钮JavaScript代码的方法
 - (NSString *)generateRedButtonJavaScript {
     NSLog(@"generateRedButtonJavaScript called");
-    // 获取自定义站点域名列表
+    // 获取用户站点域名列表
     NSArray *customSites = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CustomSites"] ?: @[];
     NSLog(@"Custom sites count: %lu", (unsigned long)customSites.count);
     NSMutableArray *customDomains = [NSMutableArray array];
@@ -752,7 +719,7 @@ typedef enum : NSUInteger {
     }
 
     // 构建包含内置域名和自定义域名的JavaScript数组
-    NSMutableArray *allDomains = [NSMutableArray arrayWithArray:@[@"yanetflix.com",@"omofun2.xyz",@"ddys.pro",@"duonaovod.com",@"kuaizi.cc",@"honghuli.com",@"jagcys.com",@"v.luttt.com",@"jinlidj.com",@"dandantu.cc"]];
+    NSMutableArray *allDomains = [NSMutableArray arrayWithArray:@[@"dandantu.cc",@"keke1.app",@"v.luttt.com",@"omofun2.xyz",@"yanetflix.com",@"jinlidj.com"]];
     [allDomains addObjectsFromArray:customDomains];
 
     // 将域名数组转换为JavaScript数组字符串
@@ -788,9 +755,9 @@ typedef enum : NSUInteger {
                 "return;"
             "}"
             "console.log('Domain allowed, creating red button...');"
-            "if(document.querySelector('.jeffern-global-fullscreen-btn')) return;"
+            "if(document.querySelector('.joyflix-global-fullscreen-btn')) return;"
             "var btn = document.createElement('button');"
-            "btn.className = 'jeffern-global-fullscreen-btn';"
+            "btn.className = 'joyflix-global-fullscreen-btn';"
             "btn.innerText = '+';"
             "btn.style.position = 'fixed';"
             "btn.style.right = '0px';"
@@ -907,7 +874,7 @@ typedef enum : NSUInteger {
     return globalBtnJS;
 }
 
-// 新增：处理自定义站点变化通知
+// 新增：处理用户站点变化通知
 - (void)handleCustomSitesDidChangeNotification:(NSNotification *)notification {
     // 重新注入红色按钮JavaScript
     [self reinjectRedButtonJavaScript];
@@ -923,7 +890,7 @@ typedef enum : NSUInteger {
     BOOL isHistoryPage = [currentUrl containsString:@"history_rendered.html"];
 
     // 先移除现有的红色按钮
-    NSString *removeJS = @"var existingBtn = document.querySelector('.jeffern-global-fullscreen-btn'); if(existingBtn) existingBtn.remove();";
+    NSString *removeJS = @"var existingBtn = document.querySelector('.joyflix-global-fullscreen-btn'); if(existingBtn) existingBtn.remove();";
     [self.webView evaluateJavaScript:removeJS completionHandler:nil];
 
     // 只有在非优选网站页面和非观影记录页面时才重新注入红色按钮
@@ -1026,7 +993,7 @@ typedef enum : NSUInteger {
     if (self.isPreventingSleep) return;
     IOReturn success = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep,
                                                    kIOPMAssertionLevelOn,
-                                                   CFSTR("JeffernMovie防止休眠/锁屏"),
+                                                   CFSTR("Joyflix防止休眠/锁屏"),
                                                    &_assertionID);
     if (success == kIOReturnSuccess) {
         self.isPreventingSleep = YES;
@@ -1068,17 +1035,11 @@ typedef enum : NSUInteger {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         builtInSites = @[
-            @{@"name": @"Emby", @"url": @"https://dongman.theluyuan.com/"},
-            @{@"name": @"可可影视", @"url": @"https://www.keke1.app/"},
-            @{@"name": @"奈飞工厂", @"url": @"https://yanetflix.com/"},
-            @{@"name": @"omofun动漫", @"url": @"https://www.omofun2.xyz/"},
-            @{@"name": @"北觅影视", @"url": @"https://v.luttt.com/"},
-            @{@"name": @"gimy", @"url": @"https://www.jagcys.com/"},
             @{@"name": @"蛋蛋兔", @"url": @"https://www.dandantu.cc/"},
-            @{@"name": @"人人影视", @"url": @"https://kuaizi.cc/"},
-            @{@"name": @"红狐狸影视", @"url": @"https://honghuli.com/"},
-            @{@"name": @"低端影视", @"url": @"https://ddys.pro/"},
-            @{@"name": @"多瑙影视", @"url": @"https://www.duonaovod.com/"},
+            @{@"name": @"可可影视", @"url": @"https://www.keke1.app/"},
+            @{@"name": @"北觅影视", @"url": @"https://v.luttt.com/"},
+            @{@"name": @"omofun动漫", @"url": @"https://www.omofun2.xyz/"},
+            @{@"name": @"奈飞工厂", @"url": @"https://yanetflix.com/"},
             @{@"name": @"CCTV", @"url": @"https://tv.cctv.com/live/"},
             @{@"name": @"直播", @"url": @"https://live.wxhbts.com/"},
             @{@"name": @"抖音短剧", @"url": @"https://www.jinlidj.com/"}

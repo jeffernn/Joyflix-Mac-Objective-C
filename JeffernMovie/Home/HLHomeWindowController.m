@@ -1,4 +1,4 @@
-//Jeffern影视平台 ©Jeffern 2025/7/15
+//Joyflix ©Joyflix 2025/7/15
 
 #import "AppDelegate.h"
 #import "HLHomeWindowController.h"

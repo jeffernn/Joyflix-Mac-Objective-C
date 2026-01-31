@@ -47,7 +47,7 @@
 		C72BBE1B1F9DE8B000C5141E /* HLHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HLHomeViewController.m; sourceTree = "<group>"; };
 		C72BBE1C1F9DE8B000C5141E /* HLHomeWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HLHomeWindowController.h; sourceTree = "<group>"; };
 		C72BBE1D1F9DE8B000C5141E /* HLHomeWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HLHomeWindowController.m; sourceTree = "<group>"; };
-		C7D9E83B1F9DA1BB00730A34 /* JEFFERNMOVIE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JEFFERNMOVIE.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7D9E83B1F9DA1BB00730A34 /* Joyflix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Joyflix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7D9E83E1F9DA1BB00730A34 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C7D9E83F1F9DA1BB00730A34 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		C7D9E8441F9DA1BB00730A34 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 		C7D9E83C1F9DA1BB00730A34 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C7D9E83B1F9DA1BB00730A34 /* JEFFERNMOVIE.app */,
+				C7D9E83B1F9DA1BB00730A34 /* Joyflix.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,7 +158,7 @@
 			);
 			name = JeffernMovie;
 			productName = JeffernMovie;
-			productReference = C7D9E83B1F9DA1BB00730A34 /* JEFFERNMOVIE.app */;
+			productReference = C7D9E83B1F9DA1BB00730A34 /* Joyflix.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -363,9 +363,9 @@
 				INFOPLIST_FILE = JeffernMovie/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 1.4.3;
+				MARKETING_VERSION = 1.4.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lhl.macvipvideo;
-				PRODUCT_NAME = JEFFERNMOVIE;
+				PRODUCT_NAME = Joyflix;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
@@ -383,9 +383,9 @@
 				INFOPLIST_FILE = JeffernMovie/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 1.4.3;
+				MARKETING_VERSION = 1.4.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lhl.macvipvideo;
-				PRODUCT_NAME = JEFFERNMOVIE;
+				PRODUCT_NAME = Joyflix;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;

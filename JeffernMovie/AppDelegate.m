@@ -1,4 +1,4 @@
-//Jeffern影视平台 ©Jeffern 2025/7/15
+//Joyflix ©Joyflix 2025/7/15
 
 
 #import "AppDelegate.h"
@@ -88,7 +88,7 @@
 
 // 新增：带手动检查标识的版本检查方法
 - (void)checkForUpdatesWithManualCheck:(BOOL)isManualCheck {
-    NSString *originalURL = @"https://github.com/jeffernn/LibreTV-MoonTV-Mac-Objective-C/releases/latest";
+    NSString *originalURL = @"https://github.com/jeffernn/Joyflix-Mac-Objective-C/releases/latest";
     [self checkForUpdatesWithURL:originalURL isRetry:NO isManualCheck:isManualCheck];
 }
 
@@ -98,7 +98,7 @@
 }
 
 - (void)checkForUpdatesWithURL:(NSString *)urlString retryLevel:(NSInteger)retryLevel isManualCheck:(BOOL)isManualCheck {
-    NSString *currentVersion = @"1.4.3";
+    NSString *currentVersion = @"1.4.4";
     NSURL *url = [NSURL URLWithString:urlString];
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -150,7 +150,7 @@
                     [alert addButtonWithTitle:@"确定"];
                     [alert addButtonWithTitle:@"取消"];
                     if ([alert runModal] == NSAlertFirstButtonReturn) {
-                        NSString *downloadURL = [NSString stringWithFormat:@"https://github.com/jeffernn/LibreTV-MoonTV-Mac-Objective-C/releases/download/v%@/JeffernMovie.app.zip", latestVersion];
+                        NSString *downloadURL = [NSString stringWithFormat:@"https://github.com/jeffernn/Joyflix-Mac-Objective-C/releases/download/v%@/Joyflix.app.zip", latestVersion];
                         [self startUpdateWithVersion:latestVersion downloadURL:downloadURL];
                     }
                 });
@@ -244,7 +244,7 @@
         self.progressPanel.progressView.indicator.doubleValue = 0;
     });
     
-    NSString *zipPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"JeffernMovie.app.zip"];
+    NSString *zipPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"Joyflix.app.zip"];
     [[NSFileManager defaultManager] removeItemAtPath:zipPath error:nil];
     NSError *moveZipError = nil;
     [[NSFileManager defaultManager] moveItemAtPath:location.path toPath:zipPath error:&moveZipError];
@@ -266,7 +266,7 @@
     [unzipTask launch];
     [unzipTask waitUntilExit];
     
-    NSString *newAppPath = [unzipDir stringByAppendingPathComponent:@"JeffernMovie.app"];
+    NSString *newAppPath = [unzipDir stringByAppendingPathComponent:@"Joyflix.app"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:newAppPath]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.progressPanel orderOut:nil];
@@ -373,7 +373,7 @@
     // 处理启动计数和缓存清理
     [self handleAppLaunchCountAndCacheCleanup];
 
-    // 监听自定义站点变化通知
+    // 监听用户站点变化通知
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleCustomSitesDidChange:)
                                                  name:@"CustomSitesDidChangeNotification"
@@ -399,40 +399,16 @@
 
     NSMenu *mainMenu = [NSApp mainMenu];
 
-    // 1. 创建并添加“内置影视”为一级主菜单
+    // 1. 创建并添加"内置影视"为一级主菜单
     NSMenu *builtInMenu = [[NSMenu alloc] initWithTitle:@"内置影视"];
-    // 二级菜单“✨”跳转到自定义网址
-    NSMenuItem *starItem = [[NSMenuItem alloc] initWithTitle:@"✨✨✨" action:@selector(changeUserCustomSiteURL:) keyEquivalent:@""];
-    [starItem setTarget:self];
-
-    // 为✨✨✨添加二级菜单
-    NSMenu *starSubMenu = [[NSMenu alloc] initWithTitle:@"✨✨✨设置"];
-    NSMenuItem *repackageItem = [[NSMenuItem alloc] initWithTitle:@"重新封装" action:@selector(showRepackageDialog:) keyEquivalent:@""];
-    repackageItem.target = self;
-    [starSubMenu addItem:repackageItem];
-    [starItem setSubmenu:starSubMenu];
-
-    [builtInMenu addItem:starItem];
-    NSArray *siteTitles = @[@"Emby",@"可可影视", @"奈飞工厂", @"omofun动漫",@"北觅影视",@"gimy",@"蛋蛋兔",@"人人影视",@"红狐狸影视",@"低端影视",@"多瑙影视",@"CCTV",@"直播",@"抖音短剧"];
-    NSArray *siteUrls = @[@"https://dongman.theluyuan.com/",@"https://www.keke1.app/",@"https://yanetflix.com/", @"https://www.omofun2.xyz/",@"https://v.luttt.com/",@"https://www.jagcys.com/",@"https://www.dandantu.cc/",@"https://kuaizi.cc/",@"https://honghuli.com/",@"https://ddys.pro/",@"https://www.duonaovod.com/",@"https://tv.cctv.com/live/",@"https://live.wxhbts.com/",@"https://www.jinlidj.com/"];
+    NSArray *siteTitles = @[@"蛋蛋兔", @"可可影视", @"北觅影视", @"omofun动漫",@"奈飞工厂",@"CCTV",@"直播",@"抖音短剧"];
+    NSArray *siteUrls = @[@"https://www.dandantu.cc/",@"https://www.keke1.app/", @"https://v.luttt.com/",@"https://www.omofun2.xyz/",@"https://yanetflix.com/",@"https://tv.cctv.com/live/",@"https://live.wxhbts.com/",@"https://www.jinlidj.com/"];
     for (NSInteger i = 0; i < siteTitles.count; i++) {
         NSMenuItem *siteItem = [[NSMenuItem alloc] initWithTitle:siteTitles[i] action:@selector(openBuiltInSite:) keyEquivalent:@""];
         siteItem.target = self;
         siteItem.representedObject = siteUrls[i];
-        // Emby项添加二级菜单
-        if ([siteTitles[i] isEqualToString:@"Emby"]) {
-            NSMenu *embySubMenu = [[NSMenu alloc] initWithTitle:@"Emby设置"];
-            NSMenuItem *setEmbyItem = [[NSMenuItem alloc] initWithTitle:@"自定义Emby" action:@selector(showSetEmbyInfoDialog:) keyEquivalent:@""];
-            setEmbyItem.target = self;
-            [embySubMenu addItem:setEmbyItem];
-            // 新增：恢复默认按钮
-            NSMenuItem *resetEmbyItem = [[NSMenuItem alloc] initWithTitle:@"恢复默认" action:@selector(resetEmbyToDefault:) keyEquivalent:@""];
-            resetEmbyItem.target = self;
-            [embySubMenu addItem:resetEmbyItem];
-            [siteItem setSubmenu:embySubMenu];
-        }
         [builtInMenu addItem:siteItem];
-        // 在Emby下方插入分隔线和复选框
+        // 在抖音短剧下方插入分隔线和复选框
         if ([siteTitles[i] isEqualToString:@"抖音短剧"]) {
             NSMenuItem *separator = [NSMenuItem separatorItem];
             [builtInMenu addItem:separator];
@@ -449,38 +425,28 @@
     [mainMenu insertItem:builtInMenuItem atIndex:1];
 
     // 2. 创建并添加“功能”为一级主菜单
-    NSMenu *featuresMenu = [[NSMenu alloc] initWithTitle:@"功能列表"];
-    NSMenuItem *checkUpdateItem = [[NSMenuItem alloc] initWithTitle:@"检测更新" action:@selector(checkForUpdates:) keyEquivalent:@""];
-    [checkUpdateItem setTarget:self];
-    [featuresMenu addItem:checkUpdateItem];
-    NSMenuItem *clearCacheItem = [[NSMenuItem alloc] initWithTitle:@"清除缓存" action:@selector(clearAppCache:) keyEquivalent:@""];
-    [clearCacheItem setTarget:self];
-    [featuresMenu addItem:clearCacheItem];
-
-    // 添加优选网站菜单项
-    [featuresMenu addItem:[NSMenuItem separatorItem]];
+    NSMenu *featuresMenu = [[NSMenu alloc] initWithTitle:@"拓展功能"];
     NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:@"观影记录" action:@selector(showHistory:) keyEquivalent:@""];
     [historyItem setTarget:self];
     [featuresMenu addItem:historyItem];
     NSMenuItem *monitorItem = [[NSMenuItem alloc] initWithTitle:@"优选网站" action:@selector(showWebsiteMonitor:) keyEquivalent:@""];
     [monitorItem setTarget:self];
     [featuresMenu addItem:monitorItem];
-    NSMenuItem *featuresMenuItem = [[NSMenuItem alloc] initWithTitle:@"功能" action:nil keyEquivalent:@""];
+
+    // 添加功能菜单项
+    [featuresMenu addItem:[NSMenuItem separatorItem]];
+    NSMenuItem *checkUpdateItem = [[NSMenuItem alloc] initWithTitle:@"检测更新" action:@selector(checkForUpdates:) keyEquivalent:@""];
+    [checkUpdateItem setTarget:self];
+    [featuresMenu addItem:checkUpdateItem];
+    NSMenuItem *clearCacheItem = [[NSMenuItem alloc] initWithTitle:@"清除缓存" action:@selector(clearAppCache:) keyEquivalent:@""];
+    [clearCacheItem setTarget:self];
+    [featuresMenu addItem:clearCacheItem];
+    NSMenuItem *featuresMenuItem = [[NSMenuItem alloc] initWithTitle:@"拓展功能" action:nil keyEquivalent:@""];
     [featuresMenuItem setSubmenu:featuresMenu];
     [mainMenu insertItem:featuresMenuItem atIndex:2];
 
     // 3. 创建并添加“福利”为一级主菜单
-    NSMenu *fuliMenu = [[NSMenu alloc] initWithTitle:@"福利列表"];
-    NSMenuItem *shadowrocketItem = [[NSMenuItem alloc] initWithTitle:@"ShadoWrocket" action:@selector(openFuliLink:) keyEquivalent:@""];
-    shadowrocketItem.target = self;
-    shadowrocketItem.representedObject = @"https://s.jiesuo.one/s/e645da4602ac4891a0533a7c1163f5c9";
-    [fuliMenu addItem:shadowrocketItem];
-        
-    NSMenuItem *tunnelItem = [[NSMenuItem alloc] initWithTitle:@"Base64 Tunnel" action:@selector(openFuliLink:) keyEquivalent:@""];
-    tunnelItem.target = self;
-    tunnelItem.representedObject = @"https://upld.zone.id/uploads/q9iq9e5iq/jsnzkpg.txt";
-    [fuliMenu addItem:tunnelItem];
-    
+    NSMenu *fuliMenu = [[NSMenu alloc] initWithTitle:@"福利"];
     NSMenuItem *clash1tunnelItem = [[NSMenuItem alloc] initWithTitle:@"Clash Tunnel（直链）" action:@selector(openFuliLink:) keyEquivalent:@""];
     clash1tunnelItem.target = self;
     clash1tunnelItem.representedObject = @"https://upld.zone.id/uploads/q9iq9e5iq/clash.txt";
@@ -495,21 +461,11 @@
     singboxtunnelItem.target = self;
     singboxtunnelItem.representedObject = @"https://clash2sfa.xmdhs.com/sub?sub=https%3A%2F%2Fupld.zone.id%2Fuploads%2Fq9iq9e5iq%2Fclash.txt";
     [fuliMenu addItem:singboxtunnelItem];
-    
+
     NSMenuItem *embyItem = [[NSMenuItem alloc] initWithTitle:@"Emby premium破解(Android TV端)" action:@selector(openFuliLink:) keyEquivalent:@""];
     embyItem.target = self;
     embyItem.representedObject = @"https://github.com/jeffernn/JeffernTV-for-Emby-crack/tree/main";
     [fuliMenu addItem:embyItem];
-
-    NSMenuItem *telegramBotItem = [[NSMenuItem alloc] initWithTitle:@"Telegram自动签到" action:@selector(openFuliLink:) keyEquivalent:@""];
-    telegramBotItem.target = self;
-    telegramBotItem.representedObject = @"https://github.com/jeffernn/Telegram-bot-auto-checkin";
-    [fuliMenu addItem:telegramBotItem];
-
-    NSMenuItem *airportItem = [[NSMenuItem alloc] initWithTitle:@"机场自动签到脚本" action:@selector(openFuliLink:) keyEquivalent:@""];
-    airportItem.target = self;
-    airportItem.representedObject = @"https://github.com/jeffernn/airport-auto-api-checkin";
-    [fuliMenu addItem:airportItem];
     
     NSMenuItem *fuliMenuItem = [[NSMenuItem alloc] initWithTitle:@"福利" action:nil keyEquivalent:@""];
     [fuliMenuItem setSubmenu:fuliMenu];
@@ -534,9 +490,9 @@
     [aboutMenuItem setSubmenu:aboutMenu];
     [mainMenu insertItem:aboutMenuItem atIndex:4];
 
-    // 2.5. 创建并添加“自定义站”为一级主菜单
-    NSMenu *customSiteMenu = [[NSMenu alloc] initWithTitle:@"自定义站"];
-    // 读取自定义站点数组
+    // 2.5. 创建并添加"用户站点"为一级主菜单
+    NSMenu *customSiteMenu = [[NSMenu alloc] initWithTitle:@"用户站点"];
+    // 读取用户站点数组
     NSArray *customSites = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CustomSites"] ?: @[];
     for (NSDictionary *site in customSites) {
         NSString *name = site[@"name"] ?: @"未命名";
@@ -571,7 +527,7 @@
     BOOL checked2 = autoOpenObj2 ? [autoOpenObj2 boolValue] : NO;
     autoOpenLastSiteItem2.state = checked2 ? NSControlStateValueOn : NSControlStateValueOff;
     [customSiteMenu addItem:autoOpenLastSiteItem2];
-    NSMenuItem *customSiteMenuItem = [[NSMenuItem alloc] initWithTitle:@"自定义站" action:nil keyEquivalent:@""];
+    NSMenuItem *customSiteMenuItem = [[NSMenuItem alloc] initWithTitle:@"用户站点" action:nil keyEquivalent:@""];
     [customSiteMenuItem setSubmenu:customSiteMenu];
     [mainMenu insertItem:customSiteMenuItem atIndex:2];
 
@@ -623,7 +579,7 @@
 
 // 新增方法实现
 - (void)openProjectWebsite:(id)sender {
-    NSString *url = @"https://github.com/jeffernn/LibreTV-MoonTV-Mac-Objective-C";
+    NSString *url = @"https://github.com/jeffernn/Joyflix-Mac-Objective-C";
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:url];
 }
 
@@ -642,7 +598,7 @@
 // 新增：生成本地静态HTML文件并展示观影记录
 - (NSString *)generateHistoryHTML {
     // 读取本地观影记录
-    NSString *historyPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/JeffernMovie/history.json"];
+    NSString *historyPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Joyflix/history.json"];
     NSData *data = [NSData dataWithContentsOfFile:historyPath];
     NSArray *history = @[];
     if (data) {
@@ -971,15 +927,18 @@
         // 删除LastBuiltInSiteURL缓存
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"LastBuiltInSiteURL"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        // 删除UserCustomSiteURL缓存
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"UserCustomSiteURL"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         // 删除config.json
-        NSString *configPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/JeffernMovie/config.json"];
+        NSString *configPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Joyflix/config.json"];
         NSFileManager *fm = [NSFileManager defaultManager];
         if ([fm fileExistsAtPath:configPath]) {
             NSError *error = nil;
             [fm removeItemAtPath:configPath error:&error];
         }
         // 新增：删除观影记录缓存
-        NSString *historyPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/JeffernMovie/history.json"];
+        NSString *historyPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Joyflix/history.json"];
         if ([fm fileExistsAtPath:historyPath]) {
             NSError *error = nil;
             [fm removeItemAtPath:historyPath error:&error];
@@ -992,11 +951,7 @@
                 }
             }
         }
-        // 新增：清除Emby自定义设置
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"EmbyCustomURL"];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"EmbyCustomUser"];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"EmbyCustomPass"];
-        // 新增：清除自定义站点
+        // 新增：清除用户站点
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CustomSites"];
         [[NSUserDefaults standardUserDefaults] synchronize];
 
@@ -1020,11 +975,8 @@
     sender.state = newState ? NSControlStateValueOn : NSControlStateValueOff;
     [[NSUserDefaults standardUserDefaults] setBool:newState forKey:@"AutoOpenLastSite"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    // 取消勾选时，自动删除上次缓存
-    if (!newState) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"LastBuiltInSiteURL"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
+    // 取消勾选时，不清除LastBuiltInSiteURL，因为那是用于首次使用后的自动打开功能
+    // 只有在启用"记录当前站点"时，才优先使用此功能
     // 刷新两个菜单的复选框状态
     NSMenu *mainMenu = [NSApp mainMenu];
     // 内置影视
@@ -1037,8 +989,8 @@
             }
         }
     }
-    // 自定义站
-    NSInteger customIdx = [mainMenu indexOfItemWithTitle:@"自定义站"];
+    // 用户站点
+    NSInteger customIdx = [mainMenu indexOfItemWithTitle:@"用户站点"];
     if (customIdx != -1) {
         NSMenu *customMenu = [[mainMenu itemAtIndex:customIdx] submenu];
         for (NSMenuItem *item in customMenu.itemArray) {
@@ -1049,134 +1001,11 @@
     }
 }
 
-// 新增：Emby设置弹窗
-- (void)showSetEmbyInfoDialog:(id)sender {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *oldUrl = [defaults stringForKey:@"EmbyCustomURL"] ?: @"";
-    NSString *oldUser = [defaults stringForKey:@"EmbyCustomUser"] ?: @"";
-    NSString *oldPass = [defaults stringForKey:@"EmbyCustomPass"] ?: @"";
-    NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = @"自定义Emby";
-    alert.informativeText = @"请输入Emby网址、账号和密码";
-    NSTextField *urlField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 54, 240, 24)];
-    urlField.placeholderString = @"Emby网址";
-    urlField.stringValue = oldUrl;
-    NSTextField *userField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 27, 240, 24)];
-    userField.placeholderString = @"账号";
-    userField.stringValue = oldUser;
-    NSSecureTextField *passField = [[NSSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 240, 24)];
-    passField.placeholderString = @"密码";
-    passField.stringValue = oldPass;
-    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 240, 78)];
-    [accessory addSubview:urlField];
-    [accessory addSubview:userField];
-    [accessory addSubview:passField];
-    alert.accessoryView = accessory;
-    [alert addButtonWithTitle:@"保存"];
-    [alert addButtonWithTitle:@"取消"];
-    NSModalResponse resp = [alert runModal];
-    if (resp == NSAlertFirstButtonReturn) {
-        NSString *url = [urlField.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        NSString *user = [userField.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        NSString *pass = [passField.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        if (url.length == 0 || user.length == 0 || pass.length == 0) {
-            NSAlert *warn = [[NSAlert alloc] init];
-            warn.messageText = @"网址、账号、密码不能为空";
-            [warn runModal];
-            return;
-        }
-        [defaults setObject:url forKey:@"EmbyCustomURL"];
-        [defaults setObject:user forKey:@"EmbyCustomUser"];
-        [defaults setObject:pass forKey:@"EmbyCustomPass"];
-        [defaults synchronize];
 
-        // 添加成功弹窗提示
-        NSAlert *successAlert = [[NSAlert alloc] init];
-        successAlert.messageText = @"Emby自定义设置成功！";
-        [successAlert runModal];
-    }
-}
 
-// 新增：恢复默认Emby设置方法
-- (void)resetEmbyToDefault:(id)sender {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:@"EmbyCustomURL"];
-    [defaults removeObjectForKey:@"EmbyCustomUser"];
-    [defaults removeObjectForKey:@"EmbyCustomPass"];
-    [defaults synchronize];
-    NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = @"已恢复为内置Emby";
-    [alert runModal];
-}
-
-// 新增：✨✨✨重新封装弹窗
-- (void)showRepackageDialog:(id)sender {
-    NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = @"重新封装";
-    alert.informativeText = @"请输入新的网址进行重新封装";
-    NSTextField *urlField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
-    urlField.placeholderString = @"https://www.xxx.com";
-
-    // 获取当前的UserCustomSiteURL作为默认值
-    NSString *currentUrl = [[NSUserDefaults standardUserDefaults] stringForKey:@"UserCustomSiteURL"];
-    if (currentUrl && currentUrl.length > 0) {
-        urlField.stringValue = currentUrl;
-    }
-
-    alert.accessoryView = urlField;
-    [alert addButtonWithTitle:@"确定"];
-    [alert addButtonWithTitle:@"取消"];
-    [alert.window setInitialFirstResponder:urlField];
-
-    NSModalResponse resp = [alert runModal];
-    if (resp == NSAlertFirstButtonReturn) {
-        NSString *url = [urlField.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        if (url.length == 0) {
-            NSAlert *warn = [[NSAlert alloc] init];
-            warn.messageText = @"网址不能为空";
-            [warn runModal];
-            return;
-        }
-
-        // 验证URL格式
-        if (![url hasPrefix:@"http://"] && ![url hasPrefix:@"https://"]) {
-            // 自动添加https://前缀
-            url = [NSString stringWithFormat:@"https://%@", url];
-        }
-
-        // 清除首次封装网站的缓存
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults removeObjectForKey:@"UserCustomSiteURL"];
-        [defaults synchronize];
-
-        // 清除WebView缓存
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomSitesDidChangeNotification" object:nil];
-
-        // 设置新的URL并重新封装
-        [defaults setObject:url forKey:@"UserCustomSiteURL"];
-        [defaults synchronize];
-
-        // 通知主界面加载新网址
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:url];
-
-        // 显示成功提示
-        NSAlert *successAlert = [[NSAlert alloc] init];
-        successAlert.messageText = @"重新封装成功！";
-        successAlert.informativeText = @"已清除缓存并重新加载新网址";
-        [successAlert runModal];
-    }
-}
-
-// 修改openBuiltInSite，Emby优先用自定义设置
 - (void)openBuiltInSite:(id)sender {
     NSString *title = ((NSMenuItem *)sender).title;
     NSString *url = ((NSMenuItem *)sender).representedObject;
-    if ([title isEqualToString:@"Emby"]) {
-        NSString *customUrl = [[NSUserDefaults standardUserDefaults] stringForKey:@"EmbyCustomURL"];
-        if (customUrl.length > 0) {
-            url = customUrl;
-        }
-    }
     if (url) {
         // 记录上次访问
         [[NSUserDefaults standardUserDefaults] setObject:url forKey:@"LastBuiltInSiteURL"];
@@ -1186,19 +1015,6 @@
     }
 }
 
-// 新增：主菜单“✨”弹出填写弹窗
-- (void)showCustomSiteInput:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:nil];
-}
-
-// 新增：让“内置影视”菜单的“✨”选项可用，点击后弹出设置
-- (void)changeUserCustomSiteURL:(id)sender {
-    // 获取当前设置的网址
-    NSString *customUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"UserCustomSiteURL"];
-    if (customUrl && customUrl.length > 0) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:customUrl];
-    }
-}
 
 // 新增统一错误弹窗方法
 - (void)showUpdateFailedAlert {
@@ -1208,7 +1024,7 @@
     [alert addButtonWithTitle:@"前往下载"];
     [alert addButtonWithTitle:@"取消"];
     if ([alert runModal] == NSAlertFirstButtonReturn) {
-        NSString *url = @"https://github.com/jeffernn/LibreTV-MoonTV-Mac-Objective-C/releases/latest";
+        NSString *url = @"https://github.com/jeffernn/Joyflix-Mac-Objective-C/releases/latest";
         [self openURLWithProxyFallback:url];
     }
 }
@@ -1261,7 +1077,7 @@
     }
 }
 
-// 新增：自定义站点菜单点击事件
+// 新增：用户站点菜单点击事件
 - (void)openCustomSite:(id)sender {
     NSString *url = ((NSMenuItem *)sender).representedObject;
     if (url) {
@@ -1272,10 +1088,10 @@
     }
 }
 
-// 新增：添加自定义站点弹窗逻辑
+// 新增：添加用户站点弹窗逻辑
 - (void)showAddCustomSiteDialog:(id)sender {
     NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = @"添加自定义站点";
+    alert.messageText = @"添加用户站点";
     alert.informativeText = @"请输入站点名称和网址（如 https://example.com）";
     NSTextField *nameField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 30, 240, 24)];
     nameField.placeholderString = @"站点名称";
@@ -1315,17 +1131,17 @@
 
         // 添加成功弹窗提示
         NSAlert *successAlert = [[NSAlert alloc] init];
-        successAlert.messageText = [NSString stringWithFormat:@"自定义站点『%@』添加成功！", name];
+        successAlert.messageText = [NSString stringWithFormat:@"用户站点『%@』添加成功！", name];
         [successAlert runModal];
     }
 }
-// 新增：刷新自定义站菜单
+// 新增：刷新用户站点菜单
 - (void)rebuildCustomSiteMenu {
     NSMenu *mainMenu = [NSApp mainMenu];
-    NSInteger idx = [mainMenu indexOfItemWithTitle:@"自定义站"];
+    NSInteger idx = [mainMenu indexOfItemWithTitle:@"用户站点"];
     if (idx == -1) return;
     NSMenuItem *customSiteMenuItem = [mainMenu itemAtIndex:idx];
-    NSMenu *customSiteMenu = [[NSMenu alloc] initWithTitle:@"自定义站"];
+    NSMenu *customSiteMenu = [[NSMenu alloc] initWithTitle:@"用户站点"];
     NSArray *customSites = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CustomSites"] ?: @[];
     for (NSInteger i = 0; i < customSites.count; i++) {
         NSDictionary *site = customSites[i];
@@ -1363,7 +1179,7 @@
     [customSiteMenuItem setSubmenu:customSiteMenu];
 }
 
-// 新增：删除自定义站点逻辑
+// 新增：删除用户站点逻辑
 - (void)deleteCustomSite:(NSMenuItem *)sender {
     NSInteger idx = sender.tag;
     NSMutableArray *customSites = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] arrayForKey:@"CustomSites"] ?: @[]];
@@ -1384,12 +1200,12 @@
 
         // 添加删除成功弹窗提示
         NSAlert *successAlert = [[NSAlert alloc] init];
-        successAlert.messageText = [NSString stringWithFormat:@"自定义站点『%@』删除成功！", name];
+        successAlert.messageText = [NSString stringWithFormat:@"用户站点『%@』删除成功！", name];
         [successAlert runModal];
     }
 }
 
-// 新增：编辑自定义站点逻辑
+// 新增：编辑用户站点逻辑
 - (void)editCustomSite:(NSMenuItem *)sender {
     NSInteger idx = sender.tag;
     NSMutableArray *customSites = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] arrayForKey:@"CustomSites"] ?: @[]];
@@ -1398,7 +1214,7 @@
     NSString *oldName = site[@"name"] ?: @"";
     NSString *oldUrl = site[@"url"] ?: @"";
     NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = @"编辑自定义站点";
+    alert.messageText = @"编辑用户站点";
     alert.informativeText = @"请修改站点名称和网址";
     NSTextField *nameField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 30, 240, 24)];
     nameField.placeholderString = @"站点名称";
@@ -1437,7 +1253,7 @@
 
         // 添加成功弹窗提示
         NSAlert *successAlert = [[NSAlert alloc] init];
-        successAlert.messageText = [NSString stringWithFormat:@"自定义站点『%@』编辑成功！", name];
+        successAlert.messageText = [NSString stringWithFormat:@"用户站点『%@』编辑成功！", name];
         [successAlert runModal];
     }
 }
@@ -1489,7 +1305,7 @@
     if (newCount == 0) {
         NSAlert *alert = [[NSAlert alloc] init];
         alert.messageText = @"没有可检查的网站";
-        alert.informativeText = @"当前没有内置站点或自定义站点需要检查";
+        alert.informativeText = @"当前没有内置站点或用户站点需要检查";
         [alert runModal];
         return;
     }
@@ -1544,8 +1360,8 @@
                 }
             }
         }
-        // 自定义站菜单
-        NSInteger customIdx = [mainMenu indexOfItemWithTitle:@"自定义站"];
+        // 用户站点菜单
+        NSInteger customIdx = [mainMenu indexOfItemWithTitle:@"用户站点"];
         if (customIdx != -1) {
             NSMenu *customMenu = [[mainMenu itemAtIndex:customIdx] submenu];
             for (NSMenuItem *item in customMenu.itemArray) {
@@ -1578,9 +1394,8 @@
     NSTimeInterval fastestTime = MAXFLOAT;
 
     for (HLMonitoredWebsite *website in websites) {
-        // 排除CCTV、Emby、抖音短剧和直播站点
+        // 排除CCTV、抖音短剧和直播站点
         if ([website.name isEqualToString:@"CCTV"] ||
-            [website.name isEqualToString:@"Emby"] ||
             [website.name isEqualToString:@"抖音短剧"] ||
             [website.name isEqualToString:@"直播"]) {
             continue;
@@ -1638,10 +1453,10 @@
 }
 
 - (void)handleCustomSitesDidChange:(NSNotification *)notification {
-    // 当自定义站点发生变化时，重新同步监控站点
+    // 当用户站点发生变化时，重新同步监控站点
     HLWebsiteMonitor *monitor = [HLWebsiteMonitor sharedInstance];
     [monitor syncAllSites];
-    NSLog(@"自定义站点变化，已重新同步监控站点，当前共 %ld 个站点", monitor.getAllWebsites.count);
+    NSLog(@"用户站点变化，已重新同步监控站点，当前共 %ld 个站点", monitor.getAllWebsites.count);
 }
 
 #pragma mark - 启动计数和缓存管理
