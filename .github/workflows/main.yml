@@ -14,14 +14,11 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 设置 Xcode 15.2 版本（正确路径 + xcode-select）
+      - name: 设置 Xcode 为默认版本（Xcode.app，简洁稳定）
         run: |
-          # 查看 runner 中所有已安装的 Xcode（可选，用于排查路径问题）
-          ls /Applications/ | grep -i xcode
-          # 切换到 Xcode 15.2 的正确路径（横杠代替下划线，runner 默认路径）
-          sudo xcode-select -s /Applications/Xcode-15.2.app
+          sudo xcode-select -s /Applications/Xcode.app
 
-      - name: 验证 Xcode 版本（必选，确认配置生效）
+      - name: 验证 Xcode 版本（确认配置生效）
         run: |
           xcode-select -p
           xcodebuild -version
