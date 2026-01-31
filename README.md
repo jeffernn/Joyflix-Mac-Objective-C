@@ -1,7 +1,7 @@
 ---
-## 🎬  Jeffern影视平台（可封装各大类影视网/Emby/已内置众多精品影视资源）MAC端（Objective-C）
+## 🎬  Joyflix影视平台（可封装各大类影视网/Emby/已内置众多精品影视资源）MAC端（Objective-C）
 <p align="center">
-  <img src="img/icon.png" alt="JeffernTV Logo" width="120" height="120">
+  <img src="img/icon.png" alt="Joyflix Logo" width="120" height="120">
 </p>
 
 <p align="center">
@@ -11,12 +11,12 @@
   <img src="https://img.shields.io/badge/License-Apache%202.0-yellow?style=for-the-badge" alt="License">
 </p>
 
-- ✨Jeffern观影平台是一款基于 macOS 原生开发（Objective-C + Cocoa） 的桌面端影视播放平台，可将影视站打包成独立的Mac应用，支持自定义影视源,内置了一些影视资源  
+- ✨Jeffern观影平台是一款基于 macOS 原生开发（Objective-C + Cocoa） 的桌面端影视播放平台，可将影视站打包成独立的Mac应用，支持自定义影视源,内置了一些影视资源
 - ✨本软件内置了精品影视资源，可点击顶部状态栏中的内置影视切换观看（内置影视的加载速度取决于你的网速，可能因为网络环境问题加载慢或无法加载，切换或开启优选网站自动优选功能）
 - ✨如需要使用Emby（Android TV端）突破高级会员限制，封装成安卓电视TV应用（安卓手机也可用，适配度可能较差），请点击[Jeffern-TV-for-Emby](https://github.com/jeffernn/JeffernTV-for-Emby-crack)
 - ✨如需使用其他端（windows）请点击[LibreTV-Mac-Python](https://github.com/jeffernn/LibreTV-Mac-Python)
 - 🎉欢迎大佬加入项目进行二开
-  
+
 ---
 ## 🧭  快速入门
 
@@ -66,7 +66,7 @@
 - ✨部分内置影视视频因影视站不支持等因素无法放大（若发现无红色按钮请使用播放器网页放大/全局放大功能），现注入一个新的放大/缩小按钮，使用流程如下：
 - ①将鼠标移动至网站的最右侧（此时会出现红色➕按钮）点击红色加号按钮即可放大/缩小视频（不是播放器内的红色按钮）。
 - ②红色加号按钮默认不显示将鼠标移动至网页最右侧后即显示，同时鼠标停留在按钮超过1S后也会自动隐藏，需再次放大/缩小请将鼠标移动至任意位置后再移动到最右侧，出现红色加号按钮后点击即可。
-  
+
 <img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/c29bb079-d143-4827-9318-8c2f214ef957" />
 <img width="1679" height="1049" alt="image" src="https://github.com/user-attachments/assets/ec75cb57-1c91-4a0f-bcf7-07057efe17ff" />
 
@@ -77,7 +77,7 @@
 - ①点击功能列表
 - ②点击优选网站
 - ③点击立即检测（若要下次自动打开最快延迟最低影视站请勾选右侧按钮，已屏蔽自动优选非观影类的内置影视）
-  
+
 <img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/9f28fceb-345c-49f2-ab86-c974fd08f709" />
 <img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/88d80125-47b9-4751-bdb1-3b5a34b8c760" />
 <img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/d729a4f0-4a7a-47c7-babd-931a693e6c26" />
@@ -91,7 +91,7 @@
 - **缓存管理**：第三次启动时自动清理缓存，避免数据过多
 - **自动打开最快站点**：可设置启动时自动打开响应速度最快的在线站点
 - **智能排序**：在线站点优先显示，按响应时间升序排列
-  
+
 ---
 ## ‼️ 重置影视站网址
 
@@ -99,7 +99,7 @@
 - ✨方法二：进行如下操作
 - ①点击菜单栏中的清除缓存后软件会自动重启
 - ②在弹出的窗口中点击✨✨✨即可重新设置
-  
+
 ---
 ## ‼️ 添加自定义站
 
@@ -107,7 +107,7 @@
 - ②点击添加站点
 - ③添加的站点会显示在列表中，可展开对其删除或编辑
 - ✨ 点击菜单可直接自定义站，二级菜单只是展示拓展功能
-  
+
 ---
 ## ‼️应用(app)无法打开,因为Apple无法检查其是否含有恶意软件（因为没有发布到APPSTORE，属正常情况，可自行下载代码审查）：
 
@@ -117,12 +117,12 @@
 - ③在“通用”选项卡下（新版本为隐私与安全性），向下滑动找到安全性如果看到“已阻止使用，因为...”，点击“仍要打开”按钮.
 - ④系统会再次提示，再次点击“打开”即可.
 - 🌟不同macos版本显示略微不同，操作类似，若找不到一致信息可将报错提示自行google或询问AI解决
-  
+
 ---
 ## ‼️双击app出现提示"文件已损坏，打不开"等提示。
 
 - 解决方法：请在终端输入以下代码，并输入电脑密码，再次打开app文件即可。
-  
+
 	```
 	sudo spctl --master-disable
 	```
@@ -142,15 +142,15 @@
 
 - 打开终端（Terminal），输入以下命令后回车，输入密码 </br>
 
-	``` 
-	sudo spctl --master-disable 
+	```
+	sudo spctl --master-disable
 	```
 
 ---
 
 ## ‼️设置应用打开默认页？
 
-- 勾选内置影视/自定义站菜单下的记录当前站点
+- 勾选内置影视/自定义站菜单下的保存当前站点
 - 下次打开即是最后一次使用应用访问的站点了
 
 ---
@@ -186,7 +186,7 @@
 
 - ✨使用github action打包
 - ✨使用本地打包
-  
+
 1. **环境要求**
    - macOS 10.12 及以上（M芯片及通用类型打包需高于macos12）
    - Xcode 10 及以上
@@ -220,7 +220,7 @@
 ## ✨ 将Emby封装成Android TV客户端？（Android手机端）
 
 - ✨Emby（Android TV端）突破高级会员限制，封装成安卓电视TV应用（安卓手机也可用，适配度可能较差），请点击[Jeffern-TV-for-Emby](https://github.com/jeffernn/JeffernTV-for-Emby-crack)
-  
+
 <p align="center">
 <img width="674" height="410" alt="image" src="https://github.com/user-attachments/assets/13869470-aaab-4e62-8b6c-7d797762bcc7" />
 </p>
@@ -230,7 +230,7 @@
 <p align="center">
 <img width="662" height="395" alt="image" src="https://github.com/user-attachments/assets/bb7acf51-054f-4308-8d96-7087d947dd94" />
 </p>
-  
+
 ---
 
 ### ✨✨✨福利

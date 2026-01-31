@@ -98,7 +98,7 @@
 }
 
 - (void)checkForUpdatesWithURL:(NSString *)urlString retryLevel:(NSInteger)retryLevel isManualCheck:(BOOL)isManualCheck {
-    NSString *currentVersion = @"1.4.4";
+    NSString *currentVersion = @"1.4.5";
     NSURL *url = [NSURL URLWithString:urlString];
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -134,13 +134,13 @@
             }
             return; // 其他错误或所有代理都失败，直接返回
         }
-        
+
         if (!data) return;
-        
+
         NSString *html = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"/releases/tag/v([0-9.]+)" options:0 error:nil];
         NSTextCheckingResult *match = [regex firstMatchInString:html options:0 range:NSMakeRange(0, html.length)];
-        
+
         if (match && match.numberOfRanges > 1) {
             NSString *latestVersion = [html substringWithRange:[match rangeAtIndex:1]];
             if ([latestVersion compare:currentVersion options:NSNumericSearch] == NSOrderedDescending) {
@@ -243,7 +243,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         self.progressPanel.progressView.indicator.doubleValue = 0;
     });
-    
+
     NSString *zipPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"Joyflix.app.zip"];
     [[NSFileManager defaultManager] removeItemAtPath:zipPath error:nil];
     NSError *moveZipError = nil;
@@ -255,17 +255,17 @@
         });
         return;
     }
-    
+
     NSString *unzipDir = [NSTemporaryDirectory() stringByAppendingPathComponent:@"update_unzip"];
     [[NSFileManager defaultManager] removeItemAtPath:unzipDir error:nil];
     [[NSFileManager defaultManager] createDirectoryAtPath:unzipDir withIntermediateDirectories:YES attributes:nil error:nil];
-    
+
     NSTask *unzipTask = [[NSTask alloc] init];
     unzipTask.launchPath = @"/usr/bin/unzip";
     unzipTask.arguments = @[@"-o", zipPath, @"-d", unzipDir];
     [unzipTask launch];
     [unzipTask waitUntilExit];
-    
+
     NSString *newAppPath = [unzipDir stringByAppendingPathComponent:@"Joyflix.app"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:newAppPath]) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -274,11 +274,11 @@
         });
         return;
     }
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         self.progressPanel.progressView.indicator.doubleValue = 0;
     });
-    
+
     NSString *currentAppPath = [[NSBundle mainBundle] bundlePath];
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *removeError = nil;
@@ -292,16 +292,16 @@
         });
         return;
     }
-    
+
     [[NSUserDefaults standardUserDefaults] setObject:(self.currentVersion ? self.currentVersion : @"") forKey:@"JustUpdatedVersion"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
+
     NSString *script = [NSString stringWithFormat:@"(sleep 1; open \"%@\") &", currentAppPath];
     system([script UTF8String]);
-    
+
     [[NSFileManager defaultManager] removeItemAtPath:zipPath error:nil];
     [[NSFileManager defaultManager] removeItemAtPath:unzipDir error:nil];
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.progressPanel orderOut:nil];
         [NSApp terminate:nil];
@@ -412,7 +412,7 @@
         if ([siteTitles[i] isEqualToString:@"抖音短剧"]) {
             NSMenuItem *separator = [NSMenuItem separatorItem];
             [builtInMenu addItem:separator];
-            NSMenuItem *autoOpenLastSiteItem = [[NSMenuItem alloc] initWithTitle:@"记录当前站点" action:@selector(toggleAutoOpenLastSite:) keyEquivalent:@""];
+            NSMenuItem *autoOpenLastSiteItem = [[NSMenuItem alloc] initWithTitle:@"保存当前站点" action:@selector(toggleAutoOpenLastSite:) keyEquivalent:@""];
             autoOpenLastSiteItem.target = self;
             NSNumber *autoOpenObj = [[NSUserDefaults standardUserDefaults] objectForKey:@"AutoOpenLastSite"];
             BOOL checked = autoOpenObj ? [autoOpenObj boolValue] : NO;
@@ -424,7 +424,7 @@
     [builtInMenuItem setSubmenu:builtInMenu];
     [mainMenu insertItem:builtInMenuItem atIndex:1];
 
-    // 2. 创建并添加“功能”为一级主菜单
+    // 2. 创建并添加"功能"为一级主菜单
     NSMenu *featuresMenu = [[NSMenu alloc] initWithTitle:@"拓展功能"];
     NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:@"观影记录" action:@selector(showHistory:) keyEquivalent:@""];
     [historyItem setTarget:self];
@@ -445,34 +445,7 @@
     [featuresMenuItem setSubmenu:featuresMenu];
     [mainMenu insertItem:featuresMenuItem atIndex:2];
 
-    // 3. 创建并添加“福利”为一级主菜单
-    NSMenu *fuliMenu = [[NSMenu alloc] initWithTitle:@"福利"];
-    NSMenuItem *clash1tunnelItem = [[NSMenuItem alloc] initWithTitle:@"Clash Tunnel（直链）" action:@selector(openFuliLink:) keyEquivalent:@""];
-    clash1tunnelItem.target = self;
-    clash1tunnelItem.representedObject = @"https://upld.zone.id/uploads/q9iq9e5iq/clash.txt";
-    [fuliMenu addItem:clash1tunnelItem];
-    
-    NSMenuItem *clash2tunnelItem = [[NSMenuItem alloc] initWithTitle:@"Clash Tunnel（科学）" action:@selector(openFuliLink:) keyEquivalent:@""];
-    clash2tunnelItem.target = self;
-    clash2tunnelItem.representedObject = @"https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/Jsnzkpg/Jsnzkpg";
-    [fuliMenu addItem:clash2tunnelItem];
-    
-    NSMenuItem *singboxtunnelItem = [[NSMenuItem alloc] initWithTitle:@"Clash Tunnel（科学1）" action:@selector(openFuliLink:) keyEquivalent:@""];
-    singboxtunnelItem.target = self;
-    singboxtunnelItem.representedObject = @"https://clash2sfa.xmdhs.com/sub?sub=https%3A%2F%2Fupld.zone.id%2Fuploads%2Fq9iq9e5iq%2Fclash.txt";
-    [fuliMenu addItem:singboxtunnelItem];
-
-    NSMenuItem *embyItem = [[NSMenuItem alloc] initWithTitle:@"Emby premium破解(Android TV端)" action:@selector(openFuliLink:) keyEquivalent:@""];
-    embyItem.target = self;
-    embyItem.representedObject = @"https://github.com/jeffernn/JeffernTV-for-Emby-crack/tree/main";
-    [fuliMenu addItem:embyItem];
-    
-    NSMenuItem *fuliMenuItem = [[NSMenuItem alloc] initWithTitle:@"福利" action:nil keyEquivalent:@""];
-    [fuliMenuItem setSubmenu:fuliMenu];
-    [mainMenu insertItem:fuliMenuItem atIndex:3];
-
-
-    // 4. 创建并添加“关于”为一级主菜单
+    // 3. 创建并添加"关于"为一级主菜单
     NSMenu *aboutMenu = [[NSMenu alloc] initWithTitle:@"关于"];
     NSMenuItem *telegramGroupItem = [[NSMenuItem alloc] initWithTitle:@"电报群聊" action:@selector(openTelegramGroup:) keyEquivalent:@""];
     telegramGroupItem.target = self;
@@ -488,7 +461,7 @@
     [aboutMenu addItem:aboutItem];
     NSMenuItem *aboutMenuItem = [[NSMenuItem alloc] initWithTitle:@"关于" action:nil keyEquivalent:@""];
     [aboutMenuItem setSubmenu:aboutMenu];
-    [mainMenu insertItem:aboutMenuItem atIndex:4];
+    [mainMenu insertItem:aboutMenuItem atIndex:3];
 
     // 2.5. 创建并添加"用户站点"为一级主菜单
     NSMenu *customSiteMenu = [[NSMenu alloc] initWithTitle:@"用户站点"];
@@ -521,7 +494,7 @@
     addSiteItem.target = self;
     [customSiteMenu addItem:addSiteItem];
     // 新增：自动打开上次影视站复选框
-    NSMenuItem *autoOpenLastSiteItem2 = [[NSMenuItem alloc] initWithTitle:@"记录当前站点" action:@selector(toggleAutoOpenLastSite:) keyEquivalent:@""];
+    NSMenuItem *autoOpenLastSiteItem2 = [[NSMenuItem alloc] initWithTitle:@"保存当前站点" action:@selector(toggleAutoOpenLastSite:) keyEquivalent:@""];
     autoOpenLastSiteItem2.target = self;
     NSNumber *autoOpenObj2 = [[NSUserDefaults standardUserDefaults] objectForKey:@"AutoOpenLastSite"];
     BOOL checked2 = autoOpenObj2 ? [autoOpenObj2 boolValue] : NO;
@@ -550,7 +523,7 @@
     while (appSubMenu.numberOfItems > 0) {
         [appSubMenu removeItemAtIndex:0];
     }
-    
+
     // 6. 退出应用
     NSMenuItem *quitItem = [[NSMenuItem alloc] initWithTitle:@"退出应用" action:@selector(terminate:) keyEquivalent:@"q"];
     [quitItem setTarget:NSApp];
@@ -976,7 +949,7 @@
     [[NSUserDefaults standardUserDefaults] setBool:newState forKey:@"AutoOpenLastSite"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     // 取消勾选时，不清除LastBuiltInSiteURL，因为那是用于首次使用后的自动打开功能
-    // 只有在启用"记录当前站点"时，才优先使用此功能
+    // 只有在启用"保存当前站点"时，才优先使用此功能
     // 刷新两个菜单的复选框状态
     NSMenu *mainMenu = [NSApp mainMenu];
     // 内置影视
@@ -984,7 +957,7 @@
     if (builtInIdx != -1) {
         NSMenu *builtInMenu = [[mainMenu itemAtIndex:builtInIdx] submenu];
         for (NSMenuItem *item in builtInMenu.itemArray) {
-            if ([item.title containsString:@"记录当前站点"]) {
+            if ([item.title containsString:@"保存当前站点"]) {
                 item.state = sender.state;
             }
         }
@@ -994,7 +967,7 @@
     if (customIdx != -1) {
         NSMenu *customMenu = [[mainMenu itemAtIndex:customIdx] submenu];
         for (NSMenuItem *item in customMenu.itemArray) {
-            if ([item.title containsString:@"记录当前站点"]) {
+            if ([item.title containsString:@"保存当前站点"]) {
                 item.state = sender.state;
             }
         }
@@ -1068,13 +1041,6 @@
 // 新增：检测更新菜单项处理方法
 - (void)checkForUpdates:(id)sender {
     [self checkForUpdatesWithManualCheck:YES];
-}
-
-- (void)openFuliLink:(id)sender {
-    NSString *url = ((NSMenuItem *)sender).representedObject;
-    if (url) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:url];
-    }
 }
 
 // 新增：用户站点菜单点击事件
@@ -1170,7 +1136,7 @@
     addSiteItem.target = self;
     [customSiteMenu addItem:addSiteItem];
     // 新增：自动打开上次影视站复选框
-    NSMenuItem *autoOpenLastSiteItem2 = [[NSMenuItem alloc] initWithTitle:@"记录当前站点" action:@selector(toggleAutoOpenLastSite:) keyEquivalent:@""];
+    NSMenuItem *autoOpenLastSiteItem2 = [[NSMenuItem alloc] initWithTitle:@"保存当前站点" action:@selector(toggleAutoOpenLastSite:) keyEquivalent:@""];
     autoOpenLastSiteItem2.target = self;
     NSNumber *autoOpenObj2 = [[NSUserDefaults standardUserDefaults] objectForKey:@"AutoOpenLastSite"];
     BOOL checked2 = autoOpenObj2 ? [autoOpenObj2 boolValue] : NO;
@@ -1342,20 +1308,20 @@
 
     [[NSUserDefaults standardUserDefaults] setBool:newState forKey:@"AutoOpenFastestSite"];
 
-    // 当启用优选网站时，自动取消记录当前站点
+    // 当启用优选网站时，自动取消保存当前站点
     if (newState) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"AutoOpenLastSite"];
         // 清除上次缓存
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"LastBuiltInSiteURL"];
 
-        // 更新菜单中"记录当前站点"的状态
+        // 更新菜单中"保存当前站点"的状态
         NSMenu *mainMenu = [NSApp mainMenu];
         // 内置影视菜单
         NSInteger builtInIdx = [mainMenu indexOfItemWithTitle:@"内置影视"];
         if (builtInIdx != -1) {
             NSMenu *builtInMenu = [[mainMenu itemAtIndex:builtInIdx] submenu];
             for (NSMenuItem *item in builtInMenu.itemArray) {
-                if ([item.title containsString:@"记录当前站点"]) {
+                if ([item.title containsString:@"保存当前站点"]) {
                     item.state = NSControlStateValueOff;
                 }
             }
@@ -1365,7 +1331,7 @@
         if (customIdx != -1) {
             NSMenu *customMenu = [[mainMenu itemAtIndex:customIdx] submenu];
             for (NSMenuItem *item in customMenu.itemArray) {
-                if ([item.title containsString:@"记录当前站点"]) {
+                if ([item.title containsString:@"保存当前站点"]) {
                     item.state = NSControlStateValueOff;
                 }
             }
@@ -1377,7 +1343,7 @@
     NSAlert *alert = [[NSAlert alloc] init];
     if (newState) {
         alert.messageText = @"已启用下次启动自动打开优选网站";
-        alert.informativeText = @"下次启动应用时，将自动打开响应速度最快的在线影视站点\n\n已自动取消\"记录当前站点\"功能";
+        alert.informativeText = @"下次启动应用时，将自动打开响应速度最快的在线影视站点\n\n已自动取消\"保存当前站点\"功能";
     } else {
         alert.messageText = @"已禁用下次启动自动打开优选网站";
         alert.informativeText = @"下次启动应用时，将按正常流程启动";

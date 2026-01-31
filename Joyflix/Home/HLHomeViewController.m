@@ -62,16 +62,16 @@ typedef enum : NSUInteger {
 
 - (void)setIsFullScreen:(BOOL)isFullScreen{
     _isFullScreen = isFullScreen;
-    
+
     [self.view setNeedsLayout:YES];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-   
+
     self.view.layer.backgroundColor = NSColor.lightGrayColor.CGColor;
     [self.view setNeedsDisplay:YES];
-    
+
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
     configuration.preferences.plugInsEnabled = YES;
     configuration.preferences.javaEnabled = YES;
@@ -83,17 +83,17 @@ typedef enum : NSUInteger {
     }
     configuration.preferences.javaScriptCanOpenWindowsAutomatically = YES;
     configuration.applicationNameForUserAgent = ChromeUserAgent;
-    
+
     // 新增：添加JS消息处理
     WKUserContentController *userContentController = [[WKUserContentController alloc] init];
     [userContentController addScriptMessageHandler:self name:@"clearHistory"];
     [userContentController addScriptMessageHandler:self name:@"checkWebsites"];
     [userContentController addScriptMessageHandler:self name:@"toggleAutoOpen"];
     configuration.userContentController = userContentController;
-    
+
     self.webView = [self createWebViewWithConfiguration:configuration];
     [self.view addSubview:self.webView];
-    
+
     [self showEmptyTipsIfNeeded];
 
     // 监听菜单切换内置影视等通知
@@ -120,7 +120,7 @@ typedef enum : NSUInteger {
             NSString *customUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"UserCustomSiteURL"];
 
             if (autoOpenLast && lastUrl.length > 0) {
-                // "记录当前站点"功能启用时，优先加载上次访问的站点
+                // "保存当前站点"功能启用时，优先加载上次访问的站点
                 [self loadUserCustomSiteURL:lastUrl];
             } else if (customUrl.length > 0) {
                 // 用户设置了用户站点，加载用户站点
@@ -153,7 +153,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)configurationDefaultData{
-  
+
 }
 
 - (void)createButtonsForData{
@@ -201,7 +201,7 @@ typedef enum : NSUInteger {
     }
     // 其它逻辑不变
     if (navigationAction.request.URL.absoluteString.length > 0) {
-        
+
         // 拦截广告
         if ([requestUrl containsString:@"ynjczy.net"] ||
             [requestUrl containsString:@"ylbdtg.com"] ||
@@ -219,17 +219,17 @@ typedef enum : NSUInteger {
         }
 
         if ([requestUrl hasSuffix:@".m3u8"]) {
-           
+
         }
         else {
-       
+
         }
-        
+
         NSLog(@"request.URL.absoluteString = %@",requestUrl);
-        
+
         if ([requestUrl hasPrefix:@"https://aweme.snssdk.co"] || [requestUrl hasPrefix:@"http://aweme.snssdk.co"]) {
             decisionHandler(WKNavigationActionPolicyCancel);
-         
+
             return;
         }
     }
@@ -408,10 +408,10 @@ typedef enum : NSUInteger {
     collectionView.dataSource = self;
     collectionView.delegate = self;
     [collectionView registerClass:[HLCollectionViewItem class] forItemWithIdentifier:@"HLCollectionViewItemID"];
-    
+
     NSClipView *clip = [[NSClipView alloc] initWithFrame:bound];
     clip.documentView = collectionView;
-    
+
     NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:frame];
     scrollView.autohidesScrollers = YES; // 自动隐藏滚动条
     scrollView.hasVerticalScroller = NO; // 强制隐藏垂直滚动条
