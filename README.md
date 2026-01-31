@@ -13,7 +13,6 @@
 
 - ✨Jeffern观影平台是一款基于 macOS 原生开发（Objective-C + Cocoa） 的桌面端影视播放平台，可将影视站打包成独立的Mac应用，支持自定义影视源,内置了一些影视资源  
 - ✨本软件内置了精品影视资源，可点击顶部状态栏中的内置影视切换观看（内置影视的加载速度取决于你的网速，可能因为网络环境问题加载慢或无法加载，切换或开启优选网站自动优选功能）
-- ⚠️Emby因被滥用原因导致被封禁，请自定义Emby服务器，欢迎大佬贡献🙏
 - ✨如需要使用Emby（Android TV端）突破高级会员限制，封装成安卓电视TV应用（安卓手机也可用，适配度可能较差），请点击[Jeffern-TV-for-Emby](https://github.com/jeffernn/JeffernTV-for-Emby-crack)
 - ✨如需使用其他端（windows）请点击[LibreTV-Mac-Python](https://github.com/jeffernn/LibreTV-Mac-Python)
 - 🎉欢迎大佬加入项目进行二开
