@@ -110,7 +110,7 @@
 		C7D9E8321F9DA1BB00730A34 = {
 			isa = PBXGroup;
 			children = (
-				C7D9E83D1F9DA1BB00730A34 /* JeffernMovie */,
+				C7D9E83D1F9DA1BB00730A34 /* Joyflix */,
 				C7D9E83C1F9DA1BB00730A34 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -123,7 +123,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C7D9E83D1F9DA1BB00730A34 /* JeffernMovie */ = {
+		C7D9E83D1F9DA1BB00730A34 /* Joyflix */ = {
 			isa = PBXGroup;
 			children = (
 				C7D9E83E1F9DA1BB00730A34 /* AppDelegate.h */,
@@ -138,15 +138,15 @@
 				C7D9E84A1F9DA1BB00730A34 /* main.m */,
 				3E8A3AA32E2BE856000E0CED /* img */,
 			);
-			path = JeffernMovie;
+			path = Joyflix;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C7D9E83A1F9DA1BB00730A34 /* JeffernMovie */ = {
+		C7D9E83A1F9DA1BB00730A34 /* Joyflix */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C7D9E84F1F9DA1BB00730A34 /* Build configuration list for PBXNativeTarget "JeffernMovie" */;
+			buildConfigurationList = C7D9E84F1F9DA1BB00730A34 /* Build configuration list for PBXNativeTarget "Joyflix" */;
 			buildPhases = (
 				C7D9E8371F9DA1BB00730A34 /* Sources */,
 				C7D9E8381F9DA1BB00730A34 /* Frameworks */,
@@ -156,8 +156,8 @@
 			);
 			dependencies = (
 			);
-			name = JeffernMovie;
-			productName = JeffernMovie;
+			name = Joyflix;
+			productName = Joyflix;
 			productReference = C7D9E83B1F9DA1BB00730A34 /* Joyflix.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -177,7 +177,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C7D9E8361F9DA1BB00730A34 /* Build configuration list for PBXProject "JeffernMovie" */;
+			buildConfigurationList = C7D9E8361F9DA1BB00730A34 /* Build configuration list for PBXProject "Joyflix" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -190,7 +190,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C7D9E83A1F9DA1BB00730A34 /* JeffernMovie */,
+				C7D9E83A1F9DA1BB00730A34 /* Joyflix */,
 			);
 		};
 /* End PBXProject section */
@@ -360,7 +360,7 @@
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = JeffernMovie/Info.plist;
+				INFOPLIST_FILE = Joyflix/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MARKETING_VERSION = 1.4.4;
@@ -380,7 +380,7 @@
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = JeffernMovie/Info.plist;
+				INFOPLIST_FILE = Joyflix/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MARKETING_VERSION = 1.4.4;
@@ -393,7 +393,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C7D9E8361F9DA1BB00730A34 /* Build configuration list for PBXProject "JeffernMovie" */ = {
+		C7D9E8361F9DA1BB00730A34 /* Build configuration list for PBXProject "Joyflix" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C7D9E84D1F9DA1BB00730A34 /* Debug */,
@@ -402,7 +402,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C7D9E84F1F9DA1BB00730A34 /* Build configuration list for PBXNativeTarget "JeffernMovie" */ = {
+		C7D9E84F1F9DA1BB00730A34 /* Build configuration list for PBXNativeTarget "Joyflix" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C7D9E8501F9DA1BB00730A34 /* Debug */,

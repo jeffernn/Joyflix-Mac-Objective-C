@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C7D9E83A1F9DA1BB00730A34"
                BuildableName = "Joyflix.app"
-               BlueprintName = "JeffernMovie"
-               ReferencedContainer = "container:JeffernMovie.xcodeproj">
+               BlueprintName = "Joyflix"
+               ReferencedContainer = "container:Joyflix.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,8 +46,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C7D9E83A1F9DA1BB00730A34"
             BuildableName = "Joyflix.app"
-            BlueprintName = "JeffernMovie"
-            ReferencedContainer = "container:JeffernMovie.xcodeproj">
+            BlueprintName = "Joyflix"
+            ReferencedContainer = "container:Joyflix.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -63,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C7D9E83A1F9DA1BB00730A34"
             BuildableName = "Joyflix.app"
-            BlueprintName = "JeffernMovie"
-            ReferencedContainer = "container:JeffernMovie.xcodeproj">
+            BlueprintName = "Joyflix"
+            ReferencedContainer = "container:Joyflix.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
