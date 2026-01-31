@@ -19,8 +19,8 @@ jobs:
 
       - name: 构建通用架构 .app
         run: |
-          xcodebuild -project JeffernMovie.xcodeproj \
-            -scheme JeffernMovie \
+          xcodebuild -project Joyflix.xcodeproj \
+            -scheme Joyflix \
             -configuration Release \
             -arch x86_64 -arch arm64 \
             -derivedDataPath build \
@@ -29,11 +29,11 @@ jobs:
       - name: 打包 .app 为 zip
         run: |
           cd build/Build/Products/Release
-          zip -r JeffernMovie.app.zip JeffernMovie.app
+          zip -r Joyflix.app.zip Joyflix.app
 
       - name: 上传到 GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          files: build/Build/Products/Release/JeffernMovie.app.zip
+          files: build/Build/Products/Release/Joyflix.app.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
