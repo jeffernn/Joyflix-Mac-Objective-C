@@ -18,26 +18,35 @@ jobs:
         run: |
           sudo xcode-select -s /Applications/Xcode.app
 
-      - name: 验证 Xcode 版本（确认配置生效）
+      - name: 验证 Xcode 版本
         run: |
           xcode-select -p
           xcodebuild -version
 
-      - name: 构建通用架构 .app
+      - name: 🔍 排查检出代码的文件结构（关键！找到.xcodeproj的实际路径）
         run: |
-          xcodebuild -project Joyflix.xcodeproj \
-            -scheme Joyflix \
+          # 查看当前工作目录下的所有文件和文件夹
+          ls -la
+          # 递归查找所有.xcodeproj文件，显示其完整路径
+          find . -name "*.xcodeproj" -type d
+
+      - name: 构建通用架构 .app（使用实际项目名称JeffernMovie，确保构建成功）
+        run: |
+          # 若find命令查到项目在子文件夹，添加 cd ./子文件夹 切换目录（示例：cd ./MyApp）
+          xcodebuild -project JeffernMovie.xcodeproj \
+            -scheme JeffernMovie \
             -configuration Release \
             -arch x86_64 -arch arm64 \
             -derivedDataPath build \
             clean build
 
-      - name: 打包 .app 为 zip
+      - name: 打包 .app 为 zip（输出文件名改为Joyflix）
         run: |
           cd build/Build/Products/Release
-          zip -r Joyflix.app.zip Joyflix.app
+          # 核心修改：输入是实际构建出的JeffernMovie.app，输出改为Joyflix.app.zip
+          zip -r Joyflix.app.zip JeffernMovie.app
 
-      - name: 上传到 GitHub Releases
+      - name: 上传到 GitHub Releases（上传修改后的Joyflix.app.zip）
         uses: softprops/action-gh-release@v2
         with:
           files: build/Build/Products/Release/Joyflix.app.zip
