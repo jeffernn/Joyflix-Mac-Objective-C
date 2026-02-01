@@ -161,6 +161,10 @@
 - ⬇️⬇️Emby客户端（macos/ipados/ios）高级订阅会员破解脚本⬇️⬇️
 - https://github.com/jeffernn/jeffern-qx/blob/main/%E9%87%8D%E5%86%99/Embypremiere/Embypremiere.conf
 - 配合Quantumult x使用
+- ⬇️⬇️将Emby突破高级会员限制，封装成安卓电视TV⬇️⬇️
+- [Jeffern-TV-for-Emby](https://github.com/jeffernn/JeffernTV-for-Emby-crack)
+- ⬇️⬇️其他端（windows）⬇️⬇️
+- [LibreTV-Mac-Python](https://github.com/jeffernn/LibreTV-Mac-Python)版本进行修改后自行打包
 
 ---
 
@@ -171,8 +175,6 @@
 - 如需分支项目请引用本项目地址
 - Joyflix 仅作为视频聚合工具，不存储、上传或分发任何视频内容。所有视频均来自第三方影视站提供的搜索结果。如有侵权内容，请联系相应的内容提供方。
 - 本项目开发者不对使用本项目产生的任何后果负责。使用本项目时，您必须遵守当地的法律法规。
-- 如需要将Emby突破高级会员限制，封装成安卓电视TV，请点击[Jeffern-TV-for-Emby](https://github.com/jeffernn/JeffernTV-for-Emby-crack)
-- 其他端（windows）的部署可参考[LibreTV-Mac-Python](https://github.com/jeffernn/LibreTV-Mac-Python)版本进行修改后自行打包
 
 ---
 
