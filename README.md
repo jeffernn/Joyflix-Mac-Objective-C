@@ -153,15 +153,15 @@
 
 ---
 
-### ✨✨✨福利
+### ✨福利
 
 - 看到这里啦！说明你认真熟读了README，我必须送你专属福利～
-- ⬇️⬇️Emby客户端（macos/ipados/ios）高级订阅会员破解脚本⬇️⬇️
+- ⬇️⬇️ Emby客户端（macos/ipados/ios）高级订阅会员破解脚本 ⬇️⬇️
 - https://github.com/jeffernn/jeffern-qx/blob/main/%E9%87%8D%E5%86%99/Embypremiere/Embypremiere.conf
 - 配合Quantumult x使用
-- ⬇️⬇️将Emby突破高级会员限制，封装成安卓电视TV⬇️⬇️
+- ⬇️⬇️ 将Emby突破高级会员限制，封装成安卓电视TV ⬇️⬇️
 - [Jeffern-TV-for-Emby](https://github.com/jeffernn/JeffernTV-for-Emby-crack)
-- ⬇️⬇️其他端（windows）⬇️⬇️
+- ⬇️⬇️ 其他端（windows）⬇️⬇️
 - [LibreTV-Mac-Python](https://github.com/jeffernn/LibreTV-Mac-Python)版本进行修改后自行打包
 
 ---
