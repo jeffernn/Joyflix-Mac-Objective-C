@@ -1,5 +1,5 @@
 ---
-## 🎬  Joyflix影视平台（可封装各大类影视网/Emby/已内置众多精品影视资源）MAC端（Objective-C）
+## 🎬  Joyflix影视平台（可封装各大类影视网/已内置众多精品影视站点）MAC端
 <p align="center">
   <img src="img/icon.png" alt="Joyflix Logo" width="120" height="120">
 </p>
@@ -11,55 +11,48 @@
   <img src="https://img.shields.io/badge/License-Apache%202.0-yellow?style=for-the-badge" alt="License">
 </p>
 
-- ✨Jeffern观影平台是一款基于 macOS 原生开发（Objective-C + Cocoa） 的桌面端影视播放平台，可将影视站打包成独立的Mac应用，支持自定义影视源,内置了一些影视资源
-- ✨本软件内置了精品影视资源，可点击顶部状态栏中的内置影视切换观看（内置影视的加载速度取决于你的网速，可能因为网络环境问题加载慢或无法加载，切换或开启优选网站自动优选功能）
+- ✨Joyflix是一款基于 macOS 原生开发（Objective-C + Cocoa） 的桌面端影视播放平台，可将影视站打包成独立的Mac应用，支持自定义影视站,已内置影视站
+- ✨本软件内置精品影视站，可点击顶部状态栏中的内置影视切换观看（内置影视的加载速度取决于你的网速，可能因为网络环境问题加载慢或无法加载，切换或开启优选网站自动优选功能）
 - ✨如需要使用Emby（Android TV端）突破高级会员限制，封装成安卓电视TV应用（安卓手机也可用，适配度可能较差），请点击[Jeffern-TV-for-Emby](https://github.com/jeffernn/JeffernTV-for-Emby-crack)
 - ✨如需使用其他端（windows）请点击[LibreTV-Mac-Python](https://github.com/jeffernn/LibreTV-Mac-Python)
-- 🎉欢迎大佬加入项目进行二开
+- 🎉欢迎大佬对项目进行二开
 
 ---
 ## 🧭  快速入门
 
 - ✨首次会弹出窗口选择内置影视源
-- ✨点击功能列表菜单栏清除缓存即可删除本软件的本地所有缓存内容
+- ✨点击拓展功能菜单栏清除缓存即可删除应用本地的所有缓存内容
 - ✨点击顶部菜单栏中的内置影视菜单可观看免费的内置影视内容
 - ✨点击观影记录可以查看你的历史浏览记录
 - ✨点击功能列表中的优选网站，可自动检测网站下次可自动打开最快的网站
 
 <p align="center">
-<img width="501" height="382" alt="image" src="https://github.com/user-attachments/assets/7670bbac-e401-436b-8145-639e488ee774" />
+<img width="1680" height="1048" alt="image" src="https://github.com/user-attachments/assets/e85983a1-dc2f-4564-95e2-243f041d61f0" />
 </p>
  <p align="center">
-  <img width="505" height="122" alt="image" src="https://github.com/user-attachments/assets/ce0bfb67-2645-4a85-908b-51ff558841e4" />
+  <img width="1679" height="54" alt="image" src="https://github.com/user-attachments/assets/b0de3ab6-f811-4a5c-9cf6-f1740a63bf86" />
  </p>
  <p align="center">
-  <img width="505" height="133" alt="image" src="https://github.com/user-attachments/assets/d018b698-650d-4ed2-a8f9-4d36793d5d8a" />
+  <img width="464" height="247" alt="image" src="https://github.com/user-attachments/assets/3c2485c7-d837-4fce-b23b-5288eb86cc58" />
  </p>
  <p align="center">
-  <img width="547" height="237" alt="image" src="https://github.com/user-attachments/assets/cb0a7c53-a66d-46b7-b043-ff1b3e1a995d" />
+  <img width="442" height="84" alt="image" src="https://github.com/user-attachments/assets/7416ec39-f5e4-4c04-86d7-d669a76f57a6" />
  </p>
  <p align="center">
   <img width="548" height="104" alt="image" src="https://github.com/user-attachments/assets/6fbb3043-3bdc-402c-babd-36d389f43689" />
  </p>
  <p align="center">
-  <img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/a4653052-8154-4243-9087-519e8fb097fd" />
+  <img width="425" height="140" alt="image" src="https://github.com/user-attachments/assets/eb2f3e73-44b8-4b2c-a428-30150fddf627" />
  </p>
  <p align="center">
-<img width="1680" height="1049" alt="image" src="https://github.com/user-attachments/assets/13703b87-4298-4b7a-8bf5-b576e017d419" />
-<img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/67688940-e02d-4bb4-89da-a450aa7c6401" />
-<img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/20d773b2-bb51-4987-930a-d063a7727255" />
-<img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/3446132e-b412-43b1-a3d6-3128625937ee" />
-<img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/7b11277e-e22f-4690-82ae-9b6ef4ac39be" />
-</p>
-<p align="center">
-  <img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/f874de0f-6c6e-4ba1-a451-d22d913fed71" />
-  <img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/49f3d6b2-92bb-4660-8370-5811576957d9" />
+<img width="424" height="125" alt="image" src="https://github.com/user-attachments/assets/d540fbbc-e424-4e7a-80fa-d2e817e9b532" />
+<img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/a5380e72-dd8e-4305-8ea4-507fc93e9c43" />
 </p>
 
 ---
 ## ‼️‼️‼️ 放大/缩小内置影视视频
 
-- ✨部分平台有内置网页放大/样式全屏点击即可放大（全局放大按钮左侧）
+- ✨部分平台有内置网页放大/样式全屏功能点击即可放大（全局放大按钮左侧）
 <img width="1058" height="598" alt="image" src="https://github.com/user-attachments/assets/57edd009-0700-43ad-983b-cdc5b237ae06" />
 
 - ✨部分内置影视视频因影视站不支持等因素无法放大（若发现无红色按钮请使用播放器网页放大/全局放大功能），现注入一个新的放大/缩小按钮，使用流程如下：
@@ -93,12 +86,12 @@
 
 
 ---
-## ‼️ 添加自定义站
+## ‼️ 添加用户站点
 
-- ①点击菜单栏中的自定义站
+- ①点击菜单栏中的用户站点
 - ②点击添加站点
 - ③添加的站点会显示在列表中，可展开对其删除或编辑
-- ✨ 点击菜单可直接自定义站，二级菜单只是展示拓展功能
+- ✨ 点击菜单可直接用户站点，二级菜单只是展示拓展功能
 
 ---
 ## ‼️应用(app)无法打开,因为Apple无法检查其是否含有恶意软件（因为没有发布到APPSTORE，属正常情况，可自行下载代码审查）：
@@ -142,14 +135,14 @@
 
 ## ‼️设置应用打开默认页？
 
-- 勾选内置影视/自定义站菜单下的保存当前站点
+- 勾选内置影视/用户站点菜单下的保存当前站点
 - 下次打开即是最后一次使用应用访问的站点了
 
 ---
 
 ## ✨  功能简介
 
-- ✨ 支持自定义影视站网址
+- ✨ 支持自定义影视站
 - ✨ 支持全屏播放（部分影视站点播放器自带网页全屏请使用播放器中的网页全屏，部分不支持的网页全屏的影视请看以上教学）
 - ✨ 点击顶部菜单栏清除缓存可清除所有缓存（重新设置自定义影视站网址）
 - ✨ 点击内置影视可观看免费的内置影视
@@ -162,15 +155,6 @@
 - ✨ 观影记录查询
 - ✨ 自动优选影视站下次自动打开最快的影视站
 - ✨ 项目完全开源，代码透明，无任何跟踪或广告
-
----
-
-## 🛠️  技术栈
-
-- **Objective-C**
-- **Cocoa（AppKit）**
-- **WebKit**（用于网页内容嵌入与播放）
-- **Xcode 工程**
 
 ---
 
