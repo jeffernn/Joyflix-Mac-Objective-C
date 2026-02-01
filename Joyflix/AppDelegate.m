@@ -98,7 +98,7 @@
 }
 
 - (void)checkForUpdatesWithURL:(NSString *)urlString retryLevel:(NSInteger)retryLevel isManualCheck:(BOOL)isManualCheck {
-    NSString *currentVersion = @"1.4.5";
+    NSString *currentVersion = @"1.4.6";
     NSURL *url = [NSURL URLWithString:urlString];
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -361,6 +361,11 @@
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JustUpdatedVersion"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+
+    // 默认启用"保存当前站点"功能
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AutoOpenLastSite"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
     [self checkForUpdates];
     // Insert code here to initialize your application
     [NSURLProtocol wk_registerScheme:@"http"];
@@ -401,23 +406,19 @@
 
     // 1. 创建并添加"内置影视"为一级主菜单
     NSMenu *builtInMenu = [[NSMenu alloc] initWithTitle:@"内置影视"];
-    NSArray *siteTitles = @[@"蛋蛋兔", @"可可影视", @"北觅影视", @"omofun动漫",@"奈飞工厂",@"CCTV",@"直播",@"抖音短剧"];
-    NSArray *siteUrls = @[@"https://www.dandantu.cc/",@"https://www.keke1.app/", @"https://v.luttt.com/",@"https://www.omofun2.xyz/",@"https://yanetflix.com/",@"https://tv.cctv.com/live/",@"https://live.wxhbts.com/",@"https://www.jinlidj.com/"];
+    NSArray *siteTitles = @[@"蛋蛋兔", @"可可影视", @"北觅影视", @"omofun动漫",@"奈飞工厂",@"爱迪影视",@"GYING",@"CCTV",@"直播",@"短剧"];
+    NSArray *siteUrls = @[@"https://www.dandantu.cc/",@"https://www.keke1.app/", @"https://v.luttt.com/",@"https://www.omofun2.xyz/",@"https://yanetflix.com/",@"https://adys.tv/",@"https://www.gying.si",@"https://tv.cctv.com/live/",@"https://live.wxhbts.com/",@"https://www.jinlidj.com/"];
     for (NSInteger i = 0; i < siteTitles.count; i++) {
         NSMenuItem *siteItem = [[NSMenuItem alloc] initWithTitle:siteTitles[i] action:@selector(openBuiltInSite:) keyEquivalent:@""];
         siteItem.target = self;
         siteItem.representedObject = siteUrls[i];
         [builtInMenu addItem:siteItem];
-        // 在抖音短剧下方插入分隔线和复选框
-        if ([siteTitles[i] isEqualToString:@"抖音短剧"]) {
+        // 在短剧下方插入分隔线
+        if ([siteTitles[i] isEqualToString:@"短剧"]) {
             NSMenuItem *separator = [NSMenuItem separatorItem];
             [builtInMenu addItem:separator];
-            NSMenuItem *autoOpenLastSiteItem = [[NSMenuItem alloc] initWithTitle:@"保存当前站点" action:@selector(toggleAutoOpenLastSite:) keyEquivalent:@""];
-            autoOpenLastSiteItem.target = self;
-            NSNumber *autoOpenObj = [[NSUserDefaults standardUserDefaults] objectForKey:@"AutoOpenLastSite"];
-            BOOL checked = autoOpenObj ? [autoOpenObj boolValue] : NO;
-            autoOpenLastSiteItem.state = checked ? NSControlStateValueOn : NSControlStateValueOff;
-            [builtInMenu addItem:autoOpenLastSiteItem];
+
+            // 添加"保存当前站点"复选框并默认选中（但现在是默认启用，不需要显示复选框）
         }
     }
     NSMenuItem *builtInMenuItem = [[NSMenuItem alloc] initWithTitle:@"内置影视" action:nil keyEquivalent:@""];
@@ -493,13 +494,6 @@
     NSMenuItem *addSiteItem = [[NSMenuItem alloc] initWithTitle:@"添加站点" action:@selector(showAddCustomSiteDialog:) keyEquivalent:@""];
     addSiteItem.target = self;
     [customSiteMenu addItem:addSiteItem];
-    // 新增：自动打开上次影视站复选框
-    NSMenuItem *autoOpenLastSiteItem2 = [[NSMenuItem alloc] initWithTitle:@"保存当前站点" action:@selector(toggleAutoOpenLastSite:) keyEquivalent:@""];
-    autoOpenLastSiteItem2.target = self;
-    NSNumber *autoOpenObj2 = [[NSUserDefaults standardUserDefaults] objectForKey:@"AutoOpenLastSite"];
-    BOOL checked2 = autoOpenObj2 ? [autoOpenObj2 boolValue] : NO;
-    autoOpenLastSiteItem2.state = checked2 ? NSControlStateValueOn : NSControlStateValueOff;
-    [customSiteMenu addItem:autoOpenLastSiteItem2];
     NSMenuItem *customSiteMenuItem = [[NSMenuItem alloc] initWithTitle:@"用户站点" action:nil keyEquivalent:@""];
     [customSiteMenuItem setSubmenu:customSiteMenu];
     [mainMenu insertItem:customSiteMenuItem atIndex:2];
@@ -942,37 +936,6 @@
     }
 }
 
-// 新增：切换复选框状态
-- (void)toggleAutoOpenLastSite:(NSMenuItem *)sender {
-    BOOL newState = sender.state == NSControlStateValueOff;
-    sender.state = newState ? NSControlStateValueOn : NSControlStateValueOff;
-    [[NSUserDefaults standardUserDefaults] setBool:newState forKey:@"AutoOpenLastSite"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    // 取消勾选时，不清除LastBuiltInSiteURL，因为那是用于首次使用后的自动打开功能
-    // 只有在启用"保存当前站点"时，才优先使用此功能
-    // 刷新两个菜单的复选框状态
-    NSMenu *mainMenu = [NSApp mainMenu];
-    // 内置影视
-    NSInteger builtInIdx = [mainMenu indexOfItemWithTitle:@"内置影视"];
-    if (builtInIdx != -1) {
-        NSMenu *builtInMenu = [[mainMenu itemAtIndex:builtInIdx] submenu];
-        for (NSMenuItem *item in builtInMenu.itemArray) {
-            if ([item.title containsString:@"保存当前站点"]) {
-                item.state = sender.state;
-            }
-        }
-    }
-    // 用户站点
-    NSInteger customIdx = [mainMenu indexOfItemWithTitle:@"用户站点"];
-    if (customIdx != -1) {
-        NSMenu *customMenu = [[mainMenu itemAtIndex:customIdx] submenu];
-        for (NSMenuItem *item in customMenu.itemArray) {
-            if ([item.title containsString:@"保存当前站点"]) {
-                item.state = sender.state;
-            }
-        }
-    }
-}
 
 
 
@@ -980,7 +943,7 @@
     NSString *title = ((NSMenuItem *)sender).title;
     NSString *url = ((NSMenuItem *)sender).representedObject;
     if (url) {
-        // 记录上次访问
+        // 总是记录上次访问（因为现在默认启用保存当前站点）
         [[NSUserDefaults standardUserDefaults] setObject:url forKey:@"LastBuiltInSiteURL"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         // 只通知主界面加载新网址，不再缓存到NSUserDefaults
@@ -1047,7 +1010,7 @@
 - (void)openCustomSite:(id)sender {
     NSString *url = ((NSMenuItem *)sender).representedObject;
     if (url) {
-        // 记录上次访问（与内置影视一致）
+        // 总是记录上次访问（因为现在默认启用保存当前站点）
         [[NSUserDefaults standardUserDefaults] setObject:url forKey:@"LastBuiltInSiteURL"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:url];
@@ -1135,13 +1098,6 @@
     NSMenuItem *addSiteItem = [[NSMenuItem alloc] initWithTitle:@"添加站点" action:@selector(showAddCustomSiteDialog:) keyEquivalent:@""];
     addSiteItem.target = self;
     [customSiteMenu addItem:addSiteItem];
-    // 新增：自动打开上次影视站复选框
-    NSMenuItem *autoOpenLastSiteItem2 = [[NSMenuItem alloc] initWithTitle:@"保存当前站点" action:@selector(toggleAutoOpenLastSite:) keyEquivalent:@""];
-    autoOpenLastSiteItem2.target = self;
-    NSNumber *autoOpenObj2 = [[NSUserDefaults standardUserDefaults] objectForKey:@"AutoOpenLastSite"];
-    BOOL checked2 = autoOpenObj2 ? [autoOpenObj2 boolValue] : NO;
-    autoOpenLastSiteItem2.state = checked2 ? NSControlStateValueOn : NSControlStateValueOff;
-    [customSiteMenu addItem:autoOpenLastSiteItem2];
     [customSiteMenuItem setSubmenu:customSiteMenu];
 }
 
@@ -1308,13 +1264,13 @@
 
     [[NSUserDefaults standardUserDefaults] setBool:newState forKey:@"AutoOpenFastestSite"];
 
-    // 当启用优选网站时，自动取消保存当前站点
+    // 当启用优选网站时，现在不会取消保存当前站点，因为它是默认启用的
     if (newState) {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"AutoOpenLastSite"];
-        // 清除上次缓存
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"LastBuiltInSiteURL"];
+        // 不再取消保存当前站点功能
+        // 但仍需同步设置到用户偏好
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AutoOpenLastSite"];
 
-        // 更新菜单中"保存当前站点"的状态
+        // 更新菜单中"保存当前站点"的状态（如果还存在的话）
         NSMenu *mainMenu = [NSApp mainMenu];
         // 内置影视菜单
         NSInteger builtInIdx = [mainMenu indexOfItemWithTitle:@"内置影视"];
@@ -1322,7 +1278,7 @@
             NSMenu *builtInMenu = [[mainMenu itemAtIndex:builtInIdx] submenu];
             for (NSMenuItem *item in builtInMenu.itemArray) {
                 if ([item.title containsString:@"保存当前站点"]) {
-                    item.state = NSControlStateValueOff;
+                    item.state = NSControlStateValueOn;
                 }
             }
         }
@@ -1332,7 +1288,7 @@
             NSMenu *customMenu = [[mainMenu itemAtIndex:customIdx] submenu];
             for (NSMenuItem *item in customMenu.itemArray) {
                 if ([item.title containsString:@"保存当前站点"]) {
-                    item.state = NSControlStateValueOff;
+                    item.state = NSControlStateValueOn;
                 }
             }
         }
@@ -1343,7 +1299,7 @@
     NSAlert *alert = [[NSAlert alloc] init];
     if (newState) {
         alert.messageText = @"已启用下次启动自动打开优选网站";
-        alert.informativeText = @"下次启动应用时，将自动打开响应速度最快的在线影视站点\n\n已自动取消\"保存当前站点\"功能";
+        alert.informativeText = @"下次启动应用时，将自动打开响应速度最快的在线影视站点";
     } else {
         alert.messageText = @"已禁用下次启动自动打开优选网站";
         alert.informativeText = @"下次启动应用时，将按正常流程启动";
@@ -1360,9 +1316,9 @@
     NSTimeInterval fastestTime = MAXFLOAT;
 
     for (HLMonitoredWebsite *website in websites) {
-        // 排除CCTV、抖音短剧和直播站点
+        // 排除CCTV、短剧和直播站点
         if ([website.name isEqualToString:@"CCTV"] ||
-            [website.name isEqualToString:@"抖音短剧"] ||
+            [website.name isEqualToString:@"短剧"] ||
             [website.name isEqualToString:@"直播"]) {
             continue;
         }

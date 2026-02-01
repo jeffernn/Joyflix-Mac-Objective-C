@@ -363,7 +363,7 @@
 				INFOPLIST_FILE = Joyflix/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 1.4.5;
+				MARKETING_VERSION = 1.4.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lhl.macvipvideo;
 				PRODUCT_NAME = Joyflix;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -383,7 +383,7 @@
 				INFOPLIST_FILE = Joyflix/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 1.4.5;
+				MARKETING_VERSION = 1.4.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lhl.macvipvideo;
 				PRODUCT_NAME = Joyflix;
 				PROVISIONING_PROFILE_SPECIFIER = "";

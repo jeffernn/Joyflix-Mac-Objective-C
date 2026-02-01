@@ -119,15 +119,12 @@ typedef enum : NSUInteger {
             NSString *lastUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"LastBuiltInSiteURL"];
             NSString *customUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"UserCustomSiteURL"];
 
-            if (autoOpenLast && lastUrl.length > 0) {
-                // "保存当前站点"功能启用时，优先加载上次访问的站点
+            if (lastUrl.length > 0) {
+                // 现在"保存当前站点"功能默认启用，总是优先加载上次访问的站点
                 [self loadUserCustomSiteURL:lastUrl];
             } else if (customUrl.length > 0) {
                 // 用户设置了用户站点，加载用户站点
                 [self loadUserCustomSiteURL:customUrl];
-            } else if (lastUrl.length > 0) {
-                // "记录当前站点"功能未启用，但存在上次使用的内置站点URL，自动加载它
-                [self loadUserCustomSiteURL:lastUrl];
             } else {
                 // 没有任何记录，直接显示内置影视站点选择弹窗
                 [self promptForBuiltInSiteURLAndLoadIfNeeded];
@@ -648,7 +645,7 @@ typedef enum : NSUInteger {
 
 - (void)loadUserCustomSiteURL:(NSString *)urlString {
     if (!urlString || urlString.length == 0) return;
-    // 显示“正在加载中”提示（更明显，垂直居中）
+    // 显示"正在加载中"提示（更明显，垂直居中）
     if (!self.loadingTipsLabel) {
         NSTextField *label = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 400, 40)];
         label.stringValue = @"正在加载中...";
@@ -678,6 +675,11 @@ typedef enum : NSUInteger {
     if (!url) return;
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
+
+    // 自动保存当前访问的站点为最后访问的站点
+    [[NSUserDefaults standardUserDefaults] setObject:urlString forKey:@"LastBuiltInSiteURL"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
     // 新增：记录观影
     [self addHistoryWithName:nil url:urlString];
 }
@@ -719,7 +721,7 @@ typedef enum : NSUInteger {
     }
 
     // 构建包含内置域名和自定义域名的JavaScript数组
-    NSMutableArray *allDomains = [NSMutableArray arrayWithArray:@[@"dandantu.cc",@"keke1.app",@"v.luttt.com",@"omofun2.xyz",@"yanetflix.com",@"jinlidj.com"]];
+    NSMutableArray *allDomains = [NSMutableArray arrayWithArray:@[@"dandantu.cc",@"keke1.app",@"v.luttt.com",@"omofun2.xyz",@"yanetflix.com",@"adys.tv",@"jinlidj.com"]];
     [allDomains addObjectsFromArray:customDomains];
 
     // 将域名数组转换为JavaScript数组字符串
@@ -1040,9 +1042,11 @@ typedef enum : NSUInteger {
             @{@"name": @"北觅影视", @"url": @"https://v.luttt.com/"},
             @{@"name": @"omofun动漫", @"url": @"https://www.omofun2.xyz/"},
             @{@"name": @"奈飞工厂", @"url": @"https://yanetflix.com/"},
+            @{@"name": @"爱迪影视", @"url": @"https://adys.tv/"},
+            @{@"name": @"GYING", @"url": @"https://www.gying.si"},
             @{@"name": @"CCTV", @"url": @"https://tv.cctv.com/live/"},
             @{@"name": @"直播", @"url": @"https://live.wxhbts.com/"},
-            @{@"name": @"抖音短剧", @"url": @"https://www.jinlidj.com/"}
+            @{@"name": @"短剧", @"url": @"https://www.jinlidj.com/"}
         ];
     });
     return builtInSites;
