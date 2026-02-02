@@ -14,6 +14,8 @@
 - (void)openTelegramGroup:(id)sender;
 - (void)clearAppCache:(id)sender;
 - (void)openBuiltInSite:(id)sender;
+- (void)openDoubanMovie:(id)sender;
+- (void)openDoubanTV:(id)sender;
 - (void)checkForUpdates;
 // 新增：声明生成HTML的方法
 - (NSString *)generateHistoryHTML;

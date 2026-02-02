@@ -98,7 +98,7 @@
 }
 
 - (void)checkForUpdatesWithURL:(NSString *)urlString retryLevel:(NSInteger)retryLevel isManualCheck:(BOOL)isManualCheck {
-    NSString *currentVersion = @"1.4.6";
+    NSString *currentVersion = @"1.4.7";
     NSURL *url = [NSURL URLWithString:urlString];
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -434,6 +434,15 @@
     [monitorItem setTarget:self];
     [featuresMenu addItem:monitorItem];
 
+    // 添加豆瓣电影和豆瓣剧集选项
+    [featuresMenu addItem:[NSMenuItem separatorItem]];
+    NSMenuItem *doubanMovieItem = [[NSMenuItem alloc] initWithTitle:@"豆瓣电影" action:@selector(openDoubanMovie:) keyEquivalent:@""];
+    [doubanMovieItem setTarget:self];
+    [featuresMenu addItem:doubanMovieItem];
+    NSMenuItem *doubanTVItem = [[NSMenuItem alloc] initWithTitle:@"豆瓣剧集" action:@selector(openDoubanTV:) keyEquivalent:@""];
+    [doubanTVItem setTarget:self];
+    [featuresMenu addItem:doubanTVItem];
+
     // 添加功能菜单项
     [featuresMenu addItem:[NSMenuItem separatorItem]];
     NSMenuItem *checkUpdateItem = [[NSMenuItem alloc] initWithTitle:@"检测更新" action:@selector(checkForUpdates:) keyEquivalent:@""];
@@ -553,6 +562,20 @@
 // 新增：关于作者方法实现
 - (void)openAuthorGitHub:(id)sender {
     NSString *url = @"https://github.com/jeffernn";
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:url];
+}
+
+// 新增：豆瓣电影方法实现
+- (void)openDoubanMovie:(id)sender {
+    NSString *url = @"https://m.douban.com/movie/";
+    // 不保存为最后访问的网站，直接通知主界面加载新网址
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:url];
+}
+
+// 新增：豆瓣剧集方法实现
+- (void)openDoubanTV:(id)sender {
+    NSString *url = @"https://m.douban.com/tv/";
+    // 不保存为最后访问的网站，直接通知主界面加载新网址
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:url];
 }
 
@@ -943,9 +966,14 @@
     NSString *title = ((NSMenuItem *)sender).title;
     NSString *url = ((NSMenuItem *)sender).representedObject;
     if (url) {
-        // 总是记录上次访问（因为现在默认启用保存当前站点）
-        [[NSUserDefaults standardUserDefaults] setObject:url forKey:@"LastBuiltInSiteURL"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        // 检查是否为豆瓣网站，如果是则不保存为最后访问的网站
+        BOOL isDoubanSite = [url rangeOfString:@"m.douban.com"].location != NSNotFound;
+
+        if (!isDoubanSite) {
+            // 不是豆瓣网站才记录上次访问
+            [[NSUserDefaults standardUserDefaults] setObject:url forKey:@"LastBuiltInSiteURL"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
         // 只通知主界面加载新网址，不再缓存到NSUserDefaults
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:url];
     }
@@ -1010,9 +1038,14 @@
 - (void)openCustomSite:(id)sender {
     NSString *url = ((NSMenuItem *)sender).representedObject;
     if (url) {
-        // 总是记录上次访问（因为现在默认启用保存当前站点）
-        [[NSUserDefaults standardUserDefaults] setObject:url forKey:@"LastBuiltInSiteURL"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        // 检查是否为豆瓣网站，如果是则不保存为最后访问的网站
+        BOOL isDoubanSite = [url rangeOfString:@"m.douban.com"].location != NSNotFound;
+
+        if (!isDoubanSite) {
+            // 不是豆瓣网站才记录上次访问
+            [[NSUserDefaults standardUserDefaults] setObject:url forKey:@"LastBuiltInSiteURL"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangeUserCustomSiteURLNotification" object:url];
     }
 }

@@ -120,8 +120,44 @@ typedef enum : NSUInteger {
             NSString *customUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"UserCustomSiteURL"];
 
             if (lastUrl.length > 0) {
-                // 现在"保存当前站点"功能默认启用，总是优先加载上次访问的站点
-                [self loadUserCustomSiteURL:lastUrl];
+                // 检查是否为豆瓣网站，如果是则不加载（避免启动时加载豆瓣网站）
+                BOOL isDoubanSite = [lastUrl rangeOfString:@"m.douban.com"].location != NSNotFound;
+
+                if (!isDoubanSite) {
+                    // 不是豆瓣网站才加载上次访问的站点
+                    [self loadUserCustomSiteURL:lastUrl];
+                } else {
+                    // 是豆瓣网站，跳过加载，自动加载用户最后访问的内置影视站点
+                    // 遍历内置站点列表，找到最近访问过的站点
+                    NSArray *builtinSites = [HLHomeViewController getBuiltInSiteURLs];
+                    NSString *lastVisitedBuiltinSite = nil;
+
+                    // 从历史记录中查找最近访问的内置站点
+                    NSMutableArray *history = [self loadHistoryArray];
+                    for (NSDictionary *item in history) {
+                        NSString *url = item[@"url"];
+                        for (NSString *builtinUrl in builtinSites) {
+                            if ([url isEqualToString:builtinUrl]) {
+                                lastVisitedBuiltinSite = builtinUrl;
+                                break;
+                            }
+                        }
+                        if (lastVisitedBuiltinSite) {
+                            break;
+                        }
+                    }
+
+                    if (lastVisitedBuiltinSite) {
+                        // 找到最近访问的内置站点，加载它
+                        [self loadUserCustomSiteURL:lastVisitedBuiltinSite];
+                    } else if (builtinSites.count > 0) {
+                        // 没有找到最近访问的内置站点，加载第一个内置站点
+                        [self loadUserCustomSiteURL:builtinSites[0]];
+                    } else {
+                        // 没有内置站点，显示选择弹窗
+                        [self promptForBuiltInSiteURLAndLoadIfNeeded];
+                    }
+                }
             } else if (customUrl.length > 0) {
                 // 用户设置了用户站点，加载用户站点
                 [self loadUserCustomSiteURL:customUrl];
