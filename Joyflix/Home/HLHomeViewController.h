@@ -19,9 +19,7 @@
 - (void)disablePreventSleep;
 - (void)saveSessionState;
 - (void)restoreSessionState;
-- (NSString *)generateRedButtonJavaScript;
 - (void)handleCustomSitesDidChangeNotification:(NSNotification *)notification;
-- (void)reinjectRedButtonJavaScript;
 
 // 获取内置站点信息
 + (NSArray *)getBuiltInSiteNames;

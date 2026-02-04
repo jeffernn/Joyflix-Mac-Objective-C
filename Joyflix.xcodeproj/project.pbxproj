@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E0449202F3390990010300B /* HLRegexMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E04491F2F3390990010300B /* HLRegexMatcher.m */; };
 		3E8A3AA42E2BE856000E0CED /* img in Resources */ = {isa = PBXBuildFile; fileRef = 3E8A3AA32E2BE856000E0CED /* img */; };
 		4F03FC9123C05BFE00292A72 /* NSString+HLAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F03FC9023C05BFE00292A72 /* NSString+HLAddition.m */; };
 		4FA3209B248B579C00DEA984 /* HybridNSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FA3209A248B579C00DEA984 /* HybridNSURLProtocol.m */; };
@@ -26,6 +27,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3E04491E2F3390910010300B /* HLRegexMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HLRegexMatcher.h; sourceTree = "<group>"; };
+		3E04491F2F3390990010300B /* HLRegexMatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HLRegexMatcher.m; sourceTree = "<group>"; };
+		3E0449212F3390A00010300B /* WKPreferences_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKPreferences_Private.h; sourceTree = "<group>"; };
 		3E8A3AA32E2BE856000E0CED /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; path = img; sourceTree = "<group>"; };
 		4F03FC8F23C05BFE00292A72 /* NSString+HLAddition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+HLAddition.h"; sourceTree = "<group>"; };
 		4F03FC9023C05BFE00292A72 /* NSString+HLAddition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+HLAddition.m"; sourceTree = "<group>"; };
@@ -85,6 +89,9 @@
 		C72BBE121F9DE8B000C5141E /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				3E0449212F3390A00010300B /* WKPreferences_Private.h */,
+				3E04491F2F3390990010300B /* HLRegexMatcher.m */,
+				3E04491E2F3390910010300B /* HLRegexMatcher.h */,
 				C7240AB01FA17AF7000684F1 /* JSONKit.h */,
 				C7240AAF1FA17AF7000684F1 /* JSONKit.m */,
 				C7240AB41FA17AF7000684F4 /* HLWebsiteMonitor.h */,
@@ -225,6 +232,7 @@
 				C7240AB21FA17AF7000684F2 /* HLWebsiteMonitor.m in Sources */,
 				C72BBE281F9DE8B000C5141E /* HLHomeWindowController.m in Sources */,
 				4FC0FB0623C824F200ADD778 /* HLCollectionViewItem.m in Sources */,
+				3E0449202F3390990010300B /* HLRegexMatcher.m in Sources */,
 				C72BBE271F9DE8B000C5141E /* HLHomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,7 +371,7 @@
 				INFOPLIST_FILE = Joyflix/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 1.4.8;
+				MARKETING_VERSION = 1.4.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lhl.macvipvideo;
 				PRODUCT_NAME = Joyflix;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -383,7 +391,7 @@
 				INFOPLIST_FILE = Joyflix/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 1.4.8;
+				MARKETING_VERSION = 1.4.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lhl.macvipvideo;
 				PRODUCT_NAME = Joyflix;
 				PROVISIONING_PROFILE_SPECIFIER = "";

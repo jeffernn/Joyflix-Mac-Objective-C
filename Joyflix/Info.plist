@@ -33,5 +33,7 @@
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSFullScreenMenuItemEnabled</key>
+	<true/>
 </dict>
 </plist>

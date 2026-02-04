@@ -98,7 +98,7 @@
 }
 
 - (void)checkForUpdatesWithURL:(NSString *)urlString retryLevel:(NSInteger)retryLevel isManualCheck:(BOOL)isManualCheck {
-    NSString *currentVersion = @"1.4.8";
+    NSString *currentVersion = @"1.4.9";
     NSURL *url = [NSURL URLWithString:urlString];
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -1088,7 +1088,6 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
         // 刷新菜单
         [self rebuildCustomSiteMenu];
-        // 通知WebView更新红色按钮JavaScript
         [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomSitesDidChangeNotification" object:nil];
 
         // 添加成功弹窗提示
@@ -1150,7 +1149,6 @@
         [[NSUserDefaults standardUserDefaults] setObject:customSites forKey:@"CustomSites"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self rebuildCustomSiteMenu];
-        // 通知WebView更新红色按钮JavaScript
         [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomSitesDidChangeNotification" object:nil];
 
         // 添加删除成功弹窗提示
@@ -1203,7 +1201,6 @@
         [[NSUserDefaults standardUserDefaults] setObject:customSites forKey:@"CustomSites"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self rebuildCustomSiteMenu];
-        // 通知WebView更新红色按钮JavaScript
         [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomSitesDidChangeNotification" object:nil];
 
         // 添加成功弹窗提示

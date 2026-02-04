@@ -9,6 +9,7 @@
 #import "HLWebsiteMonitor.h"
 #import <Foundation/Foundation.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
+#import "../Helper/WKPreferences_Private.h"
 
 #define HISTORY_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Joyflix/history.json"]
 #define SESSION_STATE_KEY @"HLHomeViewController_LastSessionURL"
@@ -83,6 +84,12 @@ typedef enum : NSUInteger {
     }
     configuration.preferences.javaScriptCanOpenWindowsAutomatically = YES;
     // 注意：不使用 applicationNameForUserAgent，改用 customUserAgent 完全替换
+
+    // 启用全屏功能
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wobjc-accessibility"
+    [configuration.preferences _setFullScreenEnabled:YES];
+    #pragma clang diagnostic pop
 
     // 新增：添加JS消息处理
     WKUserContentController *userContentController = [[WKUserContentController alloc] init];
@@ -310,24 +317,6 @@ typedef enum : NSUInteger {
         }
     }];
 
-    // 检查当前页面是否为优选网站页面或观影记录页面
-    BOOL isMonitorPage = [currentUrl containsString:@"monitor_rendered.html"];
-    BOOL isHistoryPage = [currentUrl containsString:@"history_rendered.html"];
-
-    // 只有在非优选网站页面和非观影记录页面时才注入红色按钮
-    if (!isMonitorPage && !isHistoryPage) {
-        // 页面加载完成后手动注入红色按钮JavaScript
-        NSString *globalBtnJS = [self generateRedButtonJavaScript];
-        [webView evaluateJavaScript:globalBtnJS completionHandler:^(id result, NSError *error) {
-            if (error) {
-                NSLog(@"Red button JavaScript injection error: %@", error.localizedDescription);
-            } else {
-                NSLog(@"Red button JavaScript injection successful");
-            }
-        }];
-    } else {
-        NSLog(@"Skipping red button injection for monitor/history page: %@", currentUrl);
-    }
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
@@ -411,11 +400,12 @@ typedef enum : NSUInteger {
 
 
 
-    // 只保留最右下角“+”按钮的注入，支持动态获取用户站点
-    // 恢复使用红色按钮JavaScript，但先不注入，等页面加载完成后手动注入
-    // NSString *globalBtnJS = [self generateRedButtonJavaScript];
-    // WKUserScript *globalBtnScript = [[WKUserScript alloc] initWithSource:globalBtnJS injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-    // [userContentController addUserScript:globalBtnScript];
+
+    // 为第二个WebView也启用全屏功能
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wobjc-accessibility"
+    [configuration.preferences _setFullScreenEnabled:YES];
+    #pragma clang diagnostic pop
 
     WKWebView *webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:configuration];
     webView.UIDelegate = self;
@@ -740,207 +730,7 @@ typedef enum : NSUInteger {
     [self.webView loadRequest:request];
 }
 
-// 新增：生成红色按钮JavaScript代码的方法
-- (NSString *)generateRedButtonJavaScript {
-    NSLog(@"generateRedButtonJavaScript called");
-    // 获取用户站点域名列表
-    NSArray *customSites = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CustomSites"] ?: @[];
-    NSLog(@"Custom sites count: %lu", (unsigned long)customSites.count);
-    NSMutableArray *customDomains = [NSMutableArray array];
-    for (NSDictionary *site in customSites) {
-        NSString *url = site[@"url"];
-        if (url && url.length > 0) {
-            NSURL *siteURL = [NSURL URLWithString:url];
-            if (siteURL && siteURL.host) {
-                [customDomains addObject:siteURL.host];
-            }
-        }
-    }
 
-    // 构建包含内置域名和自定义域名的JavaScript数组
-    NSMutableArray *allDomains = [NSMutableArray arrayWithArray:@[@"dandantu.cc",@"keke1.app",@"v.luttt.com",@"omofun2.xyz",@"yanetflix.com",@"adys.tv",@"jinlidj.com"]];
-    [allDomains addObjectsFromArray:customDomains];
-
-    // 将域名数组转换为JavaScript数组字符串
-    NSMutableString *domainsJS = [NSMutableString stringWithString:@"["];
-    for (NSInteger i = 0; i < allDomains.count; i++) {
-        [domainsJS appendFormat:@"'%@'", allDomains[i]];
-        if (i < allDomains.count - 1) {
-            [domainsJS appendString:@","];
-        }
-    }
-    [domainsJS appendString:@"]"];
-
-    // 生成完整的JavaScript代码
-    NSString *globalBtnJS = [NSString stringWithFormat:@""
-        "(function(){"
-            "var allowDomains = %@;"
-            "var host = location.host;"
-            "console.log('Red button script loaded. Host:', host, 'Allowed domains:', allowDomains);"
-            "var allow = false;"
-            "if (!host || host === '') {"
-                "console.log('No host found, allowing for local files');"
-                "allow = true;"
-            "} else {"
-                "for(var i=0;i<allowDomains.length;i++){"
-                    "if(host.indexOf(allowDomains[i])!==-1){"
-                        "console.log('Found matching domain:', allowDomains[i]);"
-                        "allow=true; break;"
-                    "}"
-                "}"
-            "}"
-            "if(!allow) {"
-                "console.log('Domain not allowed, skipping red button creation');"
-                "return;"
-            "}"
-            "console.log('Domain allowed, creating red button...');"
-            "if(document.querySelector('.joyflix-global-fullscreen-btn')) return;"
-            "var btn = document.createElement('button');"
-            "btn.className = 'joyflix-global-fullscreen-btn';"
-            "btn.innerText = '+';"
-            "btn.style.position = 'fixed';"
-            "btn.style.right = '0px';"
-            "btn.style.bottom = '0px';"
-            "btn.style.zIndex = '2147483647';"
-            "btn.style.background = 'rgba(255,0,0,0.8)';"
-            "btn.style.color = 'white';"
-            "btn.style.border = 'none';"
-            "btn.style.padding = '520px 3px';"
-            "btn.style.borderRadius = '8px 0 0 0';"
-            "btn.style.cursor = 'pointer';"
-            "btn.style.fontSize = '20px';"
-            "btn.style.fontWeight = 'bold';"
-            "btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';"
-            "btn.style.opacity = '0';"
-            "btn.style.pointerEvents = 'auto';"
-            "var hideTimer = null;"
-            "var autoHideTimer = null;"
-            "function showBtn(){"
-                "btn.style.opacity = '1';"
-                "if(hideTimer){ clearTimeout(hideTimer); hideTimer = null; }"
-                "if(autoHideTimer){ clearTimeout(autoHideTimer); autoHideTimer = null; }"
-                "autoHideTimer = setTimeout(function(){ btn.style.opacity = '0'; }, 1000);"
-            "}"
-            "function hideBtn(){"
-                "btn.style.opacity = '0';"
-                "if(autoHideTimer){ clearTimeout(autoHideTimer); autoHideTimer = null; }"
-            "}"
-            "btn.onmouseenter = function(){"
-                "showBtn();"
-            "};"
-            "btn.onmouseleave = function(){"
-                "if(autoHideTimer){ clearTimeout(autoHideTimer); autoHideTimer = null; }"
-                "autoHideTimer = setTimeout(function(){ btn.style.opacity = '0'; }, 1000);"
-            "};"
-            "document.addEventListener('mousemove', function(e){"
-                "var winWidth = window.innerWidth;"
-                "if(winWidth - e.clientX <= 20){"
-                    "showBtn();"
-                "}"
-            "});"
-            "btn.onclick = function(){"
-                "var iframes = Array.from(document.querySelectorAll('iframe'));"
-                "if(iframes.length===0){ alert('未找到iframe播放器'); return; }"
-                "var maxIframe = iframes[0];"
-                "var maxArea = 0;"
-                "for(var i=0;i<iframes.length;i++){"
-                    "var rect = iframes[i].getBoundingClientRect();"
-                    "var area = rect.width*rect.height;"
-                    "if(area>maxArea){ maxArea=area; maxIframe=iframes[i]; }"
-                "}"
-                "var target = maxIframe;"
-                "if(!target._isFullscreen){"
-                    "target._originParent = target.parentElement;"
-                    "target._originNext = target.nextSibling;"
-                    "target._originStyle = {"
-                        "position: target.style.position,"
-                        "zIndex: target.style.zIndex,"
-                        "left: target.style.left,"
-                        "top: target.style.top,"
-                        "width: target.style.width,"
-                        "height: target.style.height,"
-                        "background: target.style.background"
-                    "};"
-                    "document.body.appendChild(target);"
-                    "target.style.position = 'fixed';"
-                    "target.style.zIndex = '2147483646';"
-                    "target.style.left = '0';"
-                    "target.style.top = '0';"
-                    "target.style.width = '100vw';"
-                    "target.style.height = '100vh';"
-                    "target.style.background = 'black';"
-                    "target._isFullscreen = true;"
-                    "btn.innerText = '+';"
-                    "window.scrollTo(0,0);"
-                "}else{"
-                    "if(target._originParent){"
-                        "if(target._originNext && target._originNext.parentElement===target._originParent){"
-                            "target._originParent.insertBefore(target, target._originNext);"
-                        "}else{"
-                            "target._originParent.appendChild(target);"
-                        "}"
-                    "}"
-                    "if(target._originStyle){"
-                        "target.style.position = target._originStyle.position;"
-                        "target.style.zIndex = target._originStyle.zIndex;"
-                        "target.style.left = target._originStyle.left;"
-                        "target.style.top = target._originStyle.top;"
-                        "target.style.width = target._originStyle.width;"
-                        "target.style.height = target._originStyle.height;"
-                        "target.style.background = target._originStyle.background;"
-                    "}"
-                    "target._isFullscreen = false;"
-                    "btn.innerText = '+';"
-                "}"
-            "};"
-            "document.body.appendChild(btn);"
-            "document.addEventListener('keydown', function(ev){"
-                "var iframes = Array.from(document.querySelectorAll('iframe'));"
-                "var maxIframe = iframes[0];"
-                "var maxArea = 0;"
-                "for(var i=0;i<iframes.length;i++){"
-                    "var rect = iframes[i].getBoundingClientRect();"
-                    "var area = rect.width*rect.height;"
-                    "if(area>maxArea){ maxArea=area; maxIframe=iframes[i]; }"
-                "}"
-                "var target = maxIframe;"
-                "if(ev.key==='Escape' && target && target._isFullscreen){"
-                    "btn.onclick();"
-                "}"
-            "});"
-        "})();", domainsJS];
-
-    return globalBtnJS;
-}
-
-// 新增：处理用户站点变化通知
-- (void)handleCustomSitesDidChangeNotification:(NSNotification *)notification {
-    // 重新注入红色按钮JavaScript
-    [self reinjectRedButtonJavaScript];
-}
-
-// 新增：重新注入红色按钮JavaScript
-- (void)reinjectRedButtonJavaScript {
-    if (!self.webView) return;
-
-    // 检查当前页面是否为优选网站页面或观影记录页面
-    NSString *currentUrl = self.webView.URL.absoluteString;
-    BOOL isMonitorPage = [currentUrl containsString:@"monitor_rendered.html"];
-    BOOL isHistoryPage = [currentUrl containsString:@"history_rendered.html"];
-
-    // 先移除现有的红色按钮
-    NSString *removeJS = @"var existingBtn = document.querySelector('.joyflix-global-fullscreen-btn'); if(existingBtn) existingBtn.remove();";
-    [self.webView evaluateJavaScript:removeJS completionHandler:nil];
-
-    // 只有在非优选网站页面和非观影记录页面时才重新注入红色按钮
-    if (!isMonitorPage && !isHistoryPage) {
-        // 重新注入新的红色按钮JavaScript
-        NSString *newJS = [self generateRedButtonJavaScript];
-        [self.webView evaluateJavaScript:newJS completionHandler:nil];
-    } else {
-        NSLog(@"Skipping red button reinjection for monitor/history page: %@", currentUrl);
-    }
-}
 
 
 
