@@ -82,7 +82,7 @@ typedef enum : NSUInteger {
         configuration.allowsAirPlayForMediaPlayback = YES;
     }
     configuration.preferences.javaScriptCanOpenWindowsAutomatically = YES;
-    configuration.applicationNameForUserAgent = ChromeUserAgent;
+    // 注意：不使用 applicationNameForUserAgent，改用 customUserAgent 完全替换
 
     // 新增：添加JS消息处理
     WKUserContentController *userContentController = [[WKUserContentController alloc] init];
@@ -421,7 +421,8 @@ typedef enum : NSUInteger {
     webView.UIDelegate = self;
     webView.navigationDelegate = self;  // 添加导航代理
     webView.allowsBackForwardNavigationGestures = YES;
-    webView.navigationDelegate = self;
+    // 使用 customUserAgent 完全替换 User-Agent，避免 Cloudflare 验证
+    webView.customUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
     [webView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 
     return webView;
