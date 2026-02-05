@@ -98,7 +98,7 @@
 }
 
 - (void)checkForUpdatesWithURL:(NSString *)urlString retryLevel:(NSInteger)retryLevel isManualCheck:(BOOL)isManualCheck {
-    NSString *currentVersion = @"1.4.9";
+    NSString *currentVersion = @"1.5.0";
     NSURL *url = [NSURL URLWithString:urlString];
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -406,8 +406,8 @@
 
     // 1. 创建并添加"内置影视"为一级主菜单
     NSMenu *builtInMenu = [[NSMenu alloc] initWithTitle:@"内置影视"];
-    NSArray *siteTitles = @[@"蛋蛋兔", @"可可影视", @"北觅影视", @"omofun动漫",@"奈飞工厂",@"爱迪影视",@"GYING",@"CCTV",@"直播",@"短剧"];
-    NSArray *siteUrls = @[@"https://www.dandantu.cc/",@"https://www.keke1.app/", @"https://v.luttt.com/",@"https://www.omofun2.xyz/",@"https://yanetflix.com/",@"https://adys.tv/",@"https://www.gying.si",@"https://tv.cctv.com/live/",@"https://live.wxhbts.com/",@"https://www.jinlidj.com/"];
+    NSArray *siteTitles = @[@"蛋蛋兔", @"可可影视", @"北觅影视", @"奈飞工厂",@"GoFlim",@"skura动漫",@"omofun动漫",@"GAZE",@"爱迪影视",@"GYING",@"CCTV",@"直播",@"短剧"];
+    NSArray *siteUrls = @[@"https://www.dandantu.cc/",@"https://www.keke1.app/", @"https://v.luttt.com/",@"https://yanetflix.com/",@"http://113.44.5.201/index",@"https://skr.skr2.cc:666/",@"https://www.omofun2.xyz/",@"https://gaze.run/",@"https://adys.tv/",@"https://www.gying.si",@"https://tv.cctv.com/live/",@"https://live.wxhbts.com/",@"https://www.jinlidj.com/"];
     for (NSInteger i = 0; i < siteTitles.count; i++) {
         NSMenuItem *siteItem = [[NSMenuItem alloc] initWithTitle:siteTitles[i] action:@selector(openBuiltInSite:) keyEquivalent:@""];
         siteItem.target = self;
