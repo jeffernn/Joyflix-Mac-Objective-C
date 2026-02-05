@@ -29,19 +29,6 @@
  <p align="center">
   <img width="1679" height="54" alt="image" src="https://github.com/user-attachments/assets/b0de3ab6-f811-4a5c-9cf6-f1740a63bf86" />
  </p>
- <p align="center">
-  <img width="464" height="247" alt="image" src="https://github.com/user-attachments/assets/3c2485c7-d837-4fce-b23b-5288eb86cc58" />
- </p>
- <p align="center">
-  <img width="548" height="104" alt="image" src="https://github.com/user-attachments/assets/6fbb3043-3bdc-402c-babd-36d389f43689" />
- </p>
- <p align="center">
-  <img width="425" height="140" alt="image" src="https://github.com/user-attachments/assets/eb2f3e73-44b8-4b2c-a428-30150fddf627" />
- </p>
- <p align="center">
-<img width="424" height="125" alt="image" src="https://github.com/user-attachments/assets/d540fbbc-e424-4e7a-80fa-d2e817e9b532" />
-<img width="1680" height="1050" alt="image" src="https://github.com/user-attachments/assets/a5380e72-dd8e-4305-8ea4-507fc93e9c43" />
-</p>
 
 ---
 ## ‼️使用优选网站，下次自动打开最佳观影站
