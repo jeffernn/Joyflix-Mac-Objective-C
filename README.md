@@ -25,10 +25,7 @@
 
 <p align="center">
 <img width="1680" height="1048" alt="image" src="https://github.com/user-attachments/assets/e85983a1-dc2f-4564-95e2-243f041d61f0" />
-</p>
- <p align="center">
-  <img width="1679" height="54" alt="image" src="https://github.com/user-attachments/assets/b0de3ab6-f811-4a5c-9cf6-f1740a63bf86" />
- </p>
+</p
 
 ---
 ## ‼️使用优选网站，下次自动打开最佳观影站
