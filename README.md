@@ -11,8 +11,6 @@
   <img src="https://img.shields.io/badge/License-Apache%202.0-yellow?style=for-the-badge" alt="License">
 </p>
 
-- Joyflix是一款提供Mac系列设备使用的具有拦截广告特性内置精品影视站的原生影视播放应用
-
 ---
 ## 🧭  快速入门
 
