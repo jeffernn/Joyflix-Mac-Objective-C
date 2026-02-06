@@ -106,7 +106,6 @@
 
 [![加入 Telegram](https://img.shields.io/badge/Telegram-加入我们的社区-blue?logo=telegram&style=for-the-badge)](https://t.me/+vIMxDGDIWiczMTE1)
 
-欢迎加入我们的 Telegram 群，获取最新动态、分享创意、与志同道合的朋友交流！🌟
 
 ---
 
