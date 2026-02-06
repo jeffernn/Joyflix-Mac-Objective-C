@@ -83,7 +83,6 @@
 
 ### ✨相关项目推荐
 
-- 看到这里啦！说明你认真熟读了README，我必须送你专属福利～
 - ⬇️⬇️ Emby客户端（macos/ipados/ios）高级订阅会员破解脚本 ⬇️⬇️
 - https://github.com/jeffernn/jeffern-qx/blob/main/%E9%87%8D%E5%86%99/Embypremiere/Embypremiere.conf
 - 配合Quantumult x使用
