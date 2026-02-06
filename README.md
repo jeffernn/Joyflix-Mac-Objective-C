@@ -1,5 +1,5 @@
 ---
-## 🎬  Joyflix平台（可封装各大类影视网/已内置众多精品站）MAC端
+## 🎬  Joyflix平台-MAC端
 <p align="center">
   <img src="img/icon.png" alt="Joyflix Logo" width="120" height="120">
 </p>
