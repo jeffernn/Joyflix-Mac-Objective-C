@@ -107,11 +107,6 @@
 [![加入 Telegram](https://img.shields.io/badge/Telegram-加入我们的社区-blue?logo=telegram&style=for-the-badge)](https://t.me/+vIMxDGDIWiczMTE1)
 
 
----
-
-## 🌟 Star History
-
-[![Stargazers over time](https://starchart.cc/jeffernn/LibreTV-MoonTV-Mac-Objective-C.svg?variant=adaptive)](https://starchart.cc/jeffernn/LibreTV-MoonTV-Mac-Objective-C)
 
 ---
 
